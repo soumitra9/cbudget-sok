@@ -6,4 +6,4 @@ facts:
   - id: user_constraint
     value: do not change public API
     importance: required
-    probe: semantic
+    probe: exact

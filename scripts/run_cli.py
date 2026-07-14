@@ -5,9 +5,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import subprocess
+import time
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
+
+import httpx
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MAX_INFRA_RETRIES = 2
+INFRA_RETRY_SLEEP_SECONDS = 30
+INFRA_EXCEPTIONS = (httpx.ConnectError, httpx.RemoteProtocolError, httpx.TimeoutException, OSError)
 
 
 def add_orchestration_args(parser: argparse.ArgumentParser) -> None:
@@ -62,7 +70,48 @@ def _verify_hypothesis_hashes() -> None:
             )
 
 
-def maybe_preflight(args: argparse.Namespace) -> None:
+def validate_task_snapshots(task_ids: list[str]) -> None:
+    from cbudget.tasks.base import TaskSpec
+
+    missing: list[str] = []
+    for task_id in task_ids:
+        spec = TaskSpec.from_config(task_id)
+        snapshot = PROJECT_ROOT / spec.workspace_snapshot
+        if not snapshot.exists():
+            missing.append(str(spec.workspace_snapshot))
+    if missing:
+        raise RuntimeError(
+            "Missing task workspace snapshots (run scripts/build_task_snapshots.py first):\n  "
+            + "\n  ".join(sorted(set(missing)))
+        )
+
+
+def orchestrate_run_with_infra_retry(
+    orchestrate_run: Callable[..., dict[str, Any]],
+    *,
+    run_id: str,
+    max_retries: int = MAX_INFRA_RETRIES,
+    retry_sleep_seconds: int = INFRA_RETRY_SLEEP_SECONDS,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    for attempt in range(max_retries + 1):
+        try:
+            return orchestrate_run(**kwargs)
+        except INFRA_EXCEPTIONS as exc:
+            print(f"INFRA ERROR on {run_id} attempt {attempt + 1}: {exc}", flush=True)
+            if attempt >= max_retries:
+                print(f"Giving up on {run_id} after {max_retries} retries", flush=True)
+                return {
+                    "task_success": False,
+                    "status": "INFRASTRUCTURE_ERROR",
+                    "failure_state": "INFRASTRUCTURE_ERROR",
+                    "run_id": run_id,
+                }
+            time.sleep(retry_sleep_seconds)
+    raise RuntimeError("unreachable")
+
+
+def maybe_preflight(args: argparse.Namespace, *, task_ids: list[str] | None = None) -> None:
     if args.no_preflight:
         return
     import os
@@ -75,4 +124,6 @@ def maybe_preflight(args: argparse.Namespace) -> None:
         require_tokenizer()
         _validate_rtk_binary()
         _verify_hypothesis_hashes()
+        if task_ids:
+            validate_task_snapshots(task_ids)
         print("Preflight OK (vLLM + Qwen tokenizer + RTK binary + hypothesis hashes)")

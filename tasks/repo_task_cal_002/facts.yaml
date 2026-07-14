@@ -6,8 +6,8 @@ facts:
   - id: user_constraint
     value: do not change public API
     importance: required
-    probe: semantic
+    probe: exact
   - id: observed_error
     value: IndexError in parse_tokens
     importance: supporting
-    probe: semantic
+    probe: exact

@@ -39,7 +39,19 @@ def load_fact_schema(path: Path) -> list[FactSpec]:
     if not path.exists():
         return []
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return [FactSpec(**entry) for entry in data.get("facts", [])]
+    return normalize_fact_schema(data.get("facts", []))
+
+
+def normalize_fact_schema(fact_schema: list[FactSpec | dict[str, Any]]) -> list[FactSpec]:
+    normalized: list[FactSpec] = []
+    for fact in fact_schema:
+        if isinstance(fact, FactSpec):
+            normalized.append(fact)
+        elif isinstance(fact, dict):
+            normalized.append(FactSpec(**fact))
+        else:
+            raise TypeError(f"Unsupported fact schema entry type: {type(fact)!r}")
+    return normalized
 
 
 def probe_exact(fact: FactSpec, summary_text: str) -> ProbeResult:
@@ -61,10 +73,10 @@ def probe_semantic_stub(fact: FactSpec, summary_text: str) -> ProbeResult:
     )
 
 
-def run_probes(fact_schema: list[FactSpec], summary_text: str) -> list[dict[str, Any]]:
+def run_probes(fact_schema: list[FactSpec | dict[str, Any]], summary_text: str) -> list[dict[str, Any]]:
     results = []
     allow_stub = os.environ.get("CBUDGET_ALLOW_SEMANTIC_PROBE_STUB", "").lower() in ("1", "true")
-    for fact in fact_schema:
+    for fact in normalize_fact_schema(fact_schema):
         if fact.probe == "exact":
             result = probe_exact(fact, summary_text)
         elif allow_stub:

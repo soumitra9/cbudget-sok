@@ -29,6 +29,12 @@ def check_run(status: dict, events: list[dict]) -> list[str]:
                 f"{pt_values[i]} < {pt_values[i - 1]}"
             )
 
+    if pt_values:
+        max_pt = max(pt_values)
+        peak = status.get("peak_occupancy", 0)
+        if peak != max_pt:
+            failures.append(f"peak_occupancy {peak} != max prompt_tokens {max_pt}")
+
     # Invariant: compaction_call tokens appear in total_gt
     compaction_gts = sum(
         e.get("generated_tokens", 0)

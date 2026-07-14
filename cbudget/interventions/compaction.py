@@ -10,7 +10,7 @@ from cbudget.accounting.occupancy import count_tokens
 from cbudget.agent.prompt_assembler import PromptAssembler
 from cbudget.agent.state import AgentState, Message
 from cbudget.models.client import ModelClient
-from cbudget.tasks.fact_probes import FactSpec, run_probes
+from cbudget.tasks.fact_probes import run_probes
 
 
 @dataclass
@@ -98,8 +98,7 @@ def maybe_compact(
         success=state.success,
     )
 
-    fact_schema: list[FactSpec] = state.task_fact_schema  # type: ignore[assignment]
-    probe_results = run_probes(fact_schema, result.text)
+    probe_results = run_probes(state.task_fact_schema, result.text)
 
     return CompactionResult(
         old_state=state,

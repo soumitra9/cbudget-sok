@@ -18,8 +18,7 @@ class GraderResult:
 
 def run_grader(command: str, workspace: Path, timeout_seconds: int = 300) -> GraderResult:
     try:
-        env = os.environ.copy()
-        env.pop("PYTHONPATH", None)
+        env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
         env["PYTHONPATH"] = str(workspace)
         completed = subprocess.run(
             command,

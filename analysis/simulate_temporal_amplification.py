@@ -15,13 +15,21 @@ def parse_tokenskip(text: str) -> tuple[int, int] | None:
     return None
 
 
-def amplify(base: int, gamma: float, turns: int, retention: str, compaction_retention: float) -> float:
+def amplify(
+    base: int,
+    gamma: float,
+    turns: int,
+    retention: str,
+    compaction_retention: float,
+    hidden_reasoning_factor: float,
+) -> float:
     if retention == "full":
         factor = turns
     elif retention == "final_only":
         factor = 1.0
     elif retention == "hidden_reasoning":
-        factor = max(1.0, turns * 0.5)
+        # CoD-style hidden reasoning: only a fraction of turns contribute recurring PT.
+        factor = max(1.0, turns * hidden_reasoning_factor)
     else:
         # compaction_after_turn_k: sensitivity parameter derived from TokenSkip after/before ratio.
         factor = turns * compaction_retention
@@ -32,18 +40,37 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--extraction-sheet", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--compaction-retention",
+        type=float,
+        default=None,
+        help="TokenSkip after/before ratio for compaction_after_turn_k (default: parsed from sheet)",
+    )
+    parser.add_argument(
+        "--hidden-reasoning-factor",
+        type=float,
+        default=0.5,
+        help="Fraction of turns contributing recurring PT under hidden_reasoning scenario",
+    )
     args = parser.parse_args()
 
     text = Path(args.extraction_sheet).read_text(encoding="utf-8")
     tokenskip = parse_tokenskip(text) or (313, 181)
     before, after = tokenskip
     gamma = 1 - (after / before)
-    compaction_retention = after / before  # TokenSkip single-pass retention; vary for sensitivity
+    compaction_retention = args.compaction_retention if args.compaction_retention is not None else (after / before)
 
     rows = []
     for retention in ("full", "final_only", "hidden_reasoning", "compaction_after_turn_k"):
         for turns in (3, 5, 10):
-            amp = amplify(before, gamma, turns, retention, compaction_retention)
+            amp = amplify(
+                before,
+                gamma,
+                turns,
+                retention,
+                compaction_retention,
+                args.hidden_reasoning_factor,
+            )
             rows.append(
                 {
                     "method": "TokenSkip",

@@ -8,6 +8,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PLAN_ROOT = PROJECT_ROOT.parent / "0.3 Plan"
+DEFAULT_EXTRACTION_SHEET = PROJECT_ROOT / "docs" / "method_extraction_sheet_v1.md"
 RESULTS = PROJECT_ROOT / "results"
 
 
@@ -18,7 +19,13 @@ def run(cmd: list[str]) -> None:
 
 def main() -> None:
     RESULTS.mkdir(parents=True, exist_ok=True)
-    sheet = PLAN_ROOT / "method-extraction_sheet_v1.md"
+    sheet = DEFAULT_EXTRACTION_SHEET
+    if not sheet.exists():
+        sheet = PLAN_ROOT / "method-extraction_sheet_v1.md"
+    if not sheet.exists():
+        raise FileNotFoundError(
+            f"Method extraction sheet not found at {DEFAULT_EXTRACTION_SHEET} or {PLAN_ROOT / 'method-extraction_sheet_v1.md'}"
+        )
 
     run([sys.executable, "-m", "analysis.build_c2_table", "--input", str(sheet), "--output", str(RESULTS / "c2_metrics.csv")])
     run([
