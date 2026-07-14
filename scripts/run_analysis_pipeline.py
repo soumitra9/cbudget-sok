@@ -54,6 +54,8 @@ def main() -> None:
         "analysis.estimate_interactions",
         "--runs",
         str(PROJECT_ROOT / "runs/e1_rtk_compaction"),
+        "--hypothesis",
+        "configs/hypotheses/e1_frozen.yaml",
         "--output",
         str(RESULTS / "e1"),
     ])
@@ -63,6 +65,8 @@ def main() -> None:
         "analysis.estimate_interactions",
         "--runs",
         str(PROJECT_ROOT / "runs/e1b_rtk_cod"),
+        "--hypothesis",
+        "configs/hypotheses/e1b_frozen.yaml",
         "--output",
         str(RESULTS / "e1b"),
     ])
