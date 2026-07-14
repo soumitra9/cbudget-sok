@@ -41,8 +41,10 @@ def main() -> None:
     maybe_preflight(args, task_ids=tasks)
     orch = orchestration_kwargs(args)
 
-    matrix = {key: _parse_matrix_value(value) for key, value in overrides.items()}
+    matrix = {key: _parse_matrix_value(value) for key, value in overrides.items() if key in {"rtk", "compaction", "reasoning"}}
     experiment = load_experiment_config(experiment_id)
+    if not matrix and "matrix" in experiment:
+        matrix = experiment["matrix"]
 
     seeds = load_seeds(seed_set)
     keys = list(matrix.keys())

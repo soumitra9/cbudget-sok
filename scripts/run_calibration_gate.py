@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 from pathlib import Path
 
 import yaml
@@ -71,6 +72,8 @@ def evaluate_gate(runs_dir: Path, task_set_cfg: dict) -> dict:
         "parser_error_rate": parser_rate,
         "compaction_fire_rate": compaction_rate,
         "n_runs": total,
+        "backend": os.environ.get("CBUDGET_BACKEND", "mock"),
+        "note": "Mock-backend gate results are not valid for go/no-go; re-run with CBUDGET_BACKEND=vllm.",
     }
 
 

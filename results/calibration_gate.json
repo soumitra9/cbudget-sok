@@ -8,5 +8,7 @@
   "baseline_success_rate": 0.5,
   "parser_error_rate": 0.3333333333333333,
   "compaction_fire_rate": 0.0,
-  "n_runs": 6
+  "n_runs": 6,
+  "backend": "mock",
+  "note": "Mock-backend gate results are not valid for go/no-go; re-run with CBUDGET_BACKEND=vllm."
 }
