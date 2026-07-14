@@ -6,6 +6,7 @@ Semantic probes must use a different frozen model from the agent to avoid circul
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -54,32 +55,36 @@ def probe_exact(fact: FactSpec, summary_text: str) -> ProbeResult:
 
 
 def probe_semantic_stub(fact: FactSpec, summary_text: str) -> ProbeResult:
-    """
-    Rule-based semantic probe placeholder until a frozen external evaluator is wired.
-    Checks keyword overlap between fact value tokens and summary text.
-    """
-    keywords = [w.lower() for w in re.findall(r"[a-zA-Z]+", fact.value) if len(w) > 2]
-    summary_lower = summary_text.lower()
-    hits = sum(1 for kw in keywords if kw in summary_lower)
-    present = hits >= max(1, len(keywords) // 2) if keywords else fact.value.lower() in summary_lower
-    contradicted = False
-    if "do not" in fact.value.lower() or "not change" in fact.value.lower():
-        contradicted = "change public api" in summary_lower or "modify api" in summary_lower
-    return ProbeResult(
-        fact_id=fact.id,
-        present=present and not contradicted,
-        contradicted=contradicted,
-        unsupported_variant=False,
-        probe_method="semantic_rule",
+    raise NotImplementedError(
+        "Semantic fact probes require a frozen external evaluator from a different model family. "
+        "Set CBUDGET_ALLOW_SEMANTIC_PROBE_STUB=1 only for local dev."
     )
 
 
 def run_probes(fact_schema: list[FactSpec], summary_text: str) -> list[dict[str, Any]]:
     results = []
+    allow_stub = os.environ.get("CBUDGET_ALLOW_SEMANTIC_PROBE_STUB", "").lower() in ("1", "true")
     for fact in fact_schema:
         if fact.probe == "exact":
             result = probe_exact(fact, summary_text)
+        elif allow_stub:
+            result = _probe_semantic_dev_stub(fact, summary_text)
         else:
             result = probe_semantic_stub(fact, summary_text)
         results.append(result.to_dict())
     return results
+
+
+def _probe_semantic_dev_stub(fact: FactSpec, summary_text: str) -> ProbeResult:
+    """Dev-only keyword stub; never used in confirmatory runs."""
+    keywords = [w.lower() for w in re.findall(r"[a-zA-Z]+", fact.value) if len(w) > 2]
+    summary_lower = summary_text.lower()
+    hits = sum(1 for kw in keywords if kw in summary_lower)
+    present = hits >= max(1, len(keywords) // 2) if keywords else fact.value.lower() in summary_lower
+    return ProbeResult(
+        fact_id=fact.id,
+        present=present,
+        contradicted=False,
+        unsupported_variant=False,
+        probe_method="semantic_rule_dev_stub",
+    )

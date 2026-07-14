@@ -8,6 +8,9 @@ from dataclasses import dataclass
 from typing import Any
 
 
+from cbudget.accounting.occupancy import count_tokens
+
+
 @dataclass
 class GenerationResult:
     text: str
@@ -26,12 +29,12 @@ class MockBackend:
         self._turn += 1
         if self._turn == 1:
             text = 'Thought: inspect repo\n<tool_call>{"name":"shell","arguments":{"command":"ls -la"}}</tool_call>'
-            return GenerationResult(text=text, generated_tokens=len(text.split()))
+            return GenerationResult(text=text, generated_tokens=count_tokens(text))
         if self._turn == 2:
             text = "Thought: apply fix\n####\nTask complete."
-            return GenerationResult(text=text, generated_tokens=len(text.split()))
+            return GenerationResult(text=text, generated_tokens=count_tokens(text))
         text = "####\nDone."
-        return GenerationResult(text=text, generated_tokens=len(text.split()))
+        return GenerationResult(text=text, generated_tokens=count_tokens(text))
 
 
 def get_backend(seed: int = 0) -> MockBackend:

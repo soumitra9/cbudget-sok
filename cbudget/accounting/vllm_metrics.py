@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass, field
 from typing import Any
 
 import httpx
+
+# vLLM 0.8.x Prometheus names (validated against live /metrics).
+PREFIX_HITS = "vllm:gpu_prefix_cache_hits_total"
+PREFIX_QUERIES = "vllm:gpu_prefix_cache_queries_total"
 
 
 @dataclass
@@ -15,7 +18,7 @@ class VllmMetricsSnapshot:
     prefix_miss_tokens: int = 0
     prefill_latency_ms: float = 0.0
     ttft_ms: float = 0.0
-    raw: dict[str, Any] = field(default_factory=dict)
+    raw: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -42,16 +45,20 @@ def parse_prom_metrics(text: str) -> dict[str, float]:
     return values
 
 
+def _sum_metric(values: dict[str, float], name: str) -> int:
+    total = 0.0
+    for key, val in values.items():
+        if key.startswith(name):
+            total += val
+    return int(total)
+
+
 def snapshot_from_prom(text: str) -> VllmMetricsSnapshot:
     values = parse_prom_metrics(text)
-    hit = 0
-    miss = 0
-    for key, val in values.items():
-        if "prefix_cache" in key and "hit" in key:
-            hit += int(val)
-        if "prefix_cache" in key and "miss" in key:
-            miss += int(val)
-    return VllmMetricsSnapshot(prefix_hit_tokens=hit, prefix_miss_tokens=miss, raw=values)
+    hits = _sum_metric(values, PREFIX_HITS)
+    queries = _sum_metric(values, PREFIX_QUERIES)
+    misses = max(0, queries - hits)
+    return VllmMetricsSnapshot(prefix_hit_tokens=hits, prefix_miss_tokens=misses, raw=values)
 
 
 @dataclass

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from cbudget.accounting.occupancy import count_tokens
 from cbudget.agent.state import AgentState
 
 
@@ -19,11 +20,11 @@ class PromptAssembler:
 
     def regions(self, state: AgentState) -> dict[str, int]:
         return {
-            "system": len(state.system_prompt.split()),
-            "task": len(state.task_instruction.split()),
-            "tool_schema": len(state.tool_schema.split()),
-            "history": sum(len(m.content.split()) for m in state.messages),
-            "compacted_summary": len((state.compacted_summary or "").split()),
+            "system": count_tokens(state.system_prompt),
+            "task": count_tokens(state.task_instruction),
+            "tool_schema": count_tokens(state.tool_schema),
+            "history": sum(count_tokens(m.content) for m in state.messages),
+            "compacted_summary": count_tokens(state.compacted_summary or ""),
         }
 
     def to_chat_messages(self, state: AgentState) -> list[dict[str, str]]:

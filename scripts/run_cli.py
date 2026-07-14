@@ -27,7 +27,8 @@ def maybe_preflight(args: argparse.Namespace) -> None:
     import os
 
     if args.preflight or os.environ.get("CBUDGET_BACKEND", "mock").lower() == "vllm":
-        from cbudget.run_resume import preflight_backend
+        from cbudget.accounting.qwen_tokenizer import require_tokenizer
 
         preflight_backend()
-        print("Preflight OK")
+        require_tokenizer()
+        print("Preflight OK (vLLM + Qwen tokenizer)")

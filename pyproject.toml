@@ -11,6 +11,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+gpu = ["transformers>=4.45,<4.53"]
 analysis = ["numpy>=1.26", "pandas>=2.2"]
 dev = ["pytest>=8.0"]
 

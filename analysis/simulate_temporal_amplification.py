@@ -15,7 +15,7 @@ def parse_tokenskip(text: str) -> tuple[int, int] | None:
     return None
 
 
-def amplify(base: int, gamma: float, turns: int, retention: str) -> float:
+def amplify(base: int, gamma: float, turns: int, retention: str, compaction_retention: float) -> float:
     if retention == "full":
         factor = turns
     elif retention == "final_only":
@@ -23,7 +23,8 @@ def amplify(base: int, gamma: float, turns: int, retention: str) -> float:
     elif retention == "hidden_reasoning":
         factor = max(1.0, turns * 0.5)
     else:
-        factor = turns * 0.7
+        # compaction_after_turn_k: sensitivity parameter derived from TokenSkip after/before ratio.
+        factor = turns * compaction_retention
     return base * (1 + gamma * factor)
 
 
@@ -37,11 +38,12 @@ def main() -> None:
     tokenskip = parse_tokenskip(text) or (313, 181)
     before, after = tokenskip
     gamma = 1 - (after / before)
+    compaction_retention = after / before  # TokenSkip single-pass retention; vary for sensitivity
 
     rows = []
     for retention in ("full", "final_only", "hidden_reasoning", "compaction_after_turn_k"):
         for turns in (3, 5, 10):
-            amp = amplify(before, gamma, turns, retention)
+            amp = amplify(before, gamma, turns, retention, compaction_retention)
             rows.append(
                 {
                     "method": "TokenSkip",
@@ -49,6 +51,7 @@ def main() -> None:
                     "turns": turns,
                     "base_tokens": before,
                     "gamma": round(gamma, 4),
+                    "compaction_retention": round(compaction_retention, 4),
                     "amplified_tokens": round(amp, 2),
                     "evidence_label": "counterfactual_illustration",
                 }
@@ -59,7 +62,16 @@ def main() -> None:
     with out.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["method", "retention_scenario", "turns", "base_tokens", "gamma", "amplified_tokens", "evidence_label"],
+            fieldnames=[
+                "method",
+                "retention_scenario",
+                "turns",
+                "base_tokens",
+                "gamma",
+                "compaction_retention",
+                "amplified_tokens",
+                "evidence_label",
+            ],
         )
         writer.writeheader()
         writer.writerows(rows)

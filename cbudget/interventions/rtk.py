@@ -113,6 +113,7 @@ def execute_shell(
 
 def _raw_shell(command: str, cwd: Path | None = None, timeout: int = 300) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
     if cwd is not None:
         env["PYTHONPATH"] = str(cwd)
     return subprocess.run(

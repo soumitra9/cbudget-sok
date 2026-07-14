@@ -8,9 +8,14 @@ import json
 from pathlib import Path
 
 CELL_MAP = {
-    "baseline": {"rtk": "rtk0", "compaction": "off"},
-    "compaction_only": {"rtk": "rtk0", "compaction": "on"},
+    "baseline": {"rtk": "off", "compaction": "off"},
+    "compaction_only": {"rtk": "off", "compaction": "on"},
 }
+
+
+def _matches_cell(manifest: dict, spec: dict) -> bool:
+    treatment = manifest.get("treatment", {})
+    return treatment.get("rtk") == spec["rtk"] and treatment.get("compaction") == spec["compaction"]
 
 
 def main() -> None:
@@ -24,20 +29,21 @@ def main() -> None:
     selected_cells = [c.strip() for c in args.cells.split(",")]
     summaries = []
     for run_dir in sorted(runs_dir.iterdir()):
-        if not run_dir.is_dir():
+        if not run_dir.is_dir() or ".attempt" in run_dir.name:
             continue
         status_path = run_dir / "status.json"
-        if not status_path.exists():
+        manifest_path = run_dir / "manifest.json"
+        if not status_path.exists() or not manifest_path.exists():
             continue
         status = json.loads(status_path.read_text(encoding="utf-8"))
-        run_name = run_dir.name
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         for cell in selected_cells:
             spec = CELL_MAP.get(cell)
-            if spec and all(token in run_name for token in (spec["rtk"], spec["compaction"])):
+            if spec and _matches_cell(manifest, spec):
                 summaries.append(
                     {
                         "cell": cell,
-                        "run_id": run_name,
+                        "run_id": run_dir.name,
                         "mean_pt": status.get("total_serialized_pt", 0),
                         "mean_gt": status.get("total_gt", 0),
                         "peak_occupancy": status.get("peak_occupancy", 0),

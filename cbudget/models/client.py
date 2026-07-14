@@ -7,6 +7,7 @@ from typing import Any
 
 import httpx
 
+from cbudget.accounting.occupancy import count_tokens
 from cbudget.models.mock_backend import GenerationResult, MockBackend
 from cbudget.models.server_config import load_model_config
 
@@ -69,7 +70,7 @@ class ModelClient:
             usage = data.get("usage", {})
             return GenerationResult(
                 text=text,
-                generated_tokens=usage.get("completion_tokens", len(text.split())),
+                generated_tokens=usage.get("completion_tokens", count_tokens(text)),
                 finish_reason=choice.get("finish_reason", "stop"),
             )
 
@@ -99,7 +100,7 @@ class ModelClient:
             usage = data.get("usage", {})
             return GenerationResult(
                 text=text,
-                generated_tokens=usage.get("completion_tokens", len(text.split())),
+                generated_tokens=usage.get("completion_tokens", count_tokens(text)),
                 finish_reason=choice.get("finish_reason", "stop"),
             )
 

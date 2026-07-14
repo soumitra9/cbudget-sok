@@ -18,7 +18,7 @@ RESULTS = PROJECT_ROOT / "results"
 
 def evaluate_gate(runs_dir: Path, task_set_cfg: dict) -> dict:
     gate = task_set_cfg.get("go_no_go", {})
-    statuses = list(runs_dir.rglob("status.json"))
+    statuses = [p for p in runs_dir.rglob("status.json") if ".attempt" not in p.parts]
     if not statuses:
         return {"pass": False, "reason": "no runs found"}
 
@@ -70,7 +70,7 @@ def evaluate_gate(runs_dir: Path, task_set_cfg: dict) -> dict:
 
 def write_pilot_csv(runs_dir: Path, output: Path) -> None:
     rows = []
-    for status_path in runs_dir.rglob("status.json"):
+    for status_path in [p for p in runs_dir.rglob("status.json") if ".attempt" not in p.parts]:
         data = json.loads(status_path.read_text(encoding="utf-8"))
         rows.append(
             {
