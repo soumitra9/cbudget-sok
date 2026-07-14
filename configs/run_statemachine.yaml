@@ -1,0 +1,35 @@
+# Frozen run lifecycle state machine (Stage 0 spec)
+transitions:
+  - CREATED
+  - ENVIRONMENT_RESET
+  - MODEL_READY
+  - TASK_INITIALIZED
+  - ACCOUNTING_VERIFIED
+  - RUNNING
+  - GRADING
+  - ARTIFACT_COLLECTION
+  - COMPLETED
+failure_states:
+  infrastructure_retry:
+    - MODEL_ERROR
+    - TOOL_RUNNER_FAILURE
+    - GRADER_ERROR
+    - COMPACTION_ENDPOINT_ERROR
+    - INFRASTRUCTURE_ERROR
+  agent_outcome_retained:
+    - TOOL_COMMAND_INVALID
+    - TOOL_TIMEOUT
+    - PARSER_ERROR
+    - CONTEXT_EXHAUSTED
+    - TIMEOUT
+  treatment_outcome_retained:
+    - COMPACTION_PARSE_ERROR
+    - COMPACTION_LENGTH_VIOLATION
+  measured_not_failure:
+    - COMPACTION_FACT_LOSS
+  normal_tool_result:
+    - TOOL_COMMAND_NONZERO
+rules:
+  infrastructure_failures: retry_with_same_seed_and_block
+  agent_failures: retain_in_outcome_and_cost
+  compaction_fact_loss: continue_run_record_in_outcome

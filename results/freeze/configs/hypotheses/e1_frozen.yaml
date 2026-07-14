@@ -1,0 +1,26 @@
+experiment: e1_rtk_compaction
+primary_outcome: cumulative_serialized_prompt_tokens_per_attempted_task
+min_effect_of_interest: 0.15
+ci_width_target: 0.20
+stopping_rule: fixed_n_blocks_no_early_stopping
+secondary_outcomes:
+  - task_success
+  - peak_occupancy
+  - compaction_firing_probability
+  - compaction_turn
+  - post_compaction_fact_retention_score
+estimands:
+  raw_interaction: "Y11 - Y10 - Y01 + Y00"
+  log_multiplicative_interaction: "log Y11 - log Y10 - log Y01 + log Y00"
+  success_adjusted_cost: "sum_i C_i / sum_i 1[success_i]"
+statistical_model:
+  default: "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed"
+  robustness: "PT_trajectory ~ rtk + compaction + rtk:compaction + (1|task) + (1|seed)"
+hypotheses:
+  interaction_direction: non_additive_under_specified_policy
+  rtk_main_effect: reduces_tool_output_pt
+  compaction_main_effect: reduces_history_pt_net_of_summarization_gt
+interaction_claim:
+  confirmatory_if: "CI excludes zero under pre-registered MDE"
+  exploratory_if: "MDE > 15% PT reduction at Stage 3 power check"
+multiplicity: "One primary; secondaries descriptive with unadjusted CIs"

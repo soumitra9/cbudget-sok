@@ -1,0 +1,13 @@
+provider: runpod
+gpu: NVIDIA A40 48GB
+ssh_user: root
+ssh_identity_file: ~/.ssh/id_ed25519_personal
+ssh_public_key_file: ~/.ssh/id_ed25519_personal.pub
+vllm_port: 8000
+cache_isolation:
+  candidate_methods:
+    - validated_reset_endpoint
+    - server_restart
+  frozen_method: null
+  acceptance_test:
+    identical_prefix_after_reset_has_no_cross_run_hits: true

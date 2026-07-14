@@ -1,0 +1,13 @@
+facts:
+  - id: target_file
+    value: src/parser.py
+    importance: required
+    probe: exact
+  - id: user_constraint
+    value: do not change public API
+    importance: required
+    probe: semantic
+  - id: observed_error
+    value: IndexError in parse_tokens
+    importance: supporting
+    probe: semantic

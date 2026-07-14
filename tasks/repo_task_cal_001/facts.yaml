@@ -1,0 +1,13 @@
+facts:
+  - id: target_file
+    value: src/calculator.py
+    importance: required
+    probe: exact
+  - id: user_constraint
+    value: do not change public API
+    importance: required
+    probe: semantic
+  - id: observed_error
+    value: AssertionError in test_add
+    importance: supporting
+    probe: semantic

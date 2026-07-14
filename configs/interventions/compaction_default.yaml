@@ -1,0 +1,11 @@
+enabled: true
+trigger_tokens: null  # frozen after Stage 3; calibration starting value 8192
+hot_tail_tokens: 2000
+max_summary_tokens: 1024
+temperature: 0.0
+recursion_enabled: true
+same_model: true
+summary_prompt: |
+  Summarize the conversation history below. Preserve task constraints, file paths,
+  error messages, test failures, and any facts required to continue the task.
+  Do not invent information. Output only the summary.

@@ -1,0 +1,9 @@
+task_set_id: coding_confirmatory_v1
+description: Frozen confirmatory tasks for E1 and E1b.
+tasks:
+  - repo_task_001
+  - repo_task_002
+  - repo_task_003
+  - repo_task_004
+  - repo_task_005
+  - repo_task_006

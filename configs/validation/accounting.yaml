@@ -1,0 +1,7 @@
+invariants:
+  - name: occupancy_equals_max_prompt_tokens
+    description: Peak occupancy equals max serialized prompt tokens across turns.
+  - name: cumulative_pt_monotonic
+    description: Cumulative serialized PT is non-decreasing within a trajectory.
+  - name: compaction_call_tokens_counted
+    description: Compaction summarization GT appears in compaction_call events and is excluded from net PT savings.

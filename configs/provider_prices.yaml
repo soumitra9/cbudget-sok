@@ -1,0 +1,8 @@
+providers:
+  runpod_a40:
+    gpu_hour_usd: 0.90
+  anthropic_counterfactual:
+    input_per_mtok: 3.00
+    output_per_mtok: 15.00
+    cache_write_per_mtok: 3.75
+    cache_read_per_mtok: 0.30

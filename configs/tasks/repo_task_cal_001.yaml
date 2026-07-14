@@ -1,0 +1,15 @@
+task_id: repo_task_cal_001
+repository: local://tasks/repo_task_cal_001
+base_commit: base
+workspace_snapshot: tasks/repo_task_cal_001/snapshot.tar.gz
+instruction_file: tasks/repo_task_cal_001/prompt.md
+grader:
+  command: pytest tests/ -q --tb=short
+  timeout_seconds: 300
+allowed_tools:
+- shell
+max_agent_turns: 30
+max_model_calls: 40
+max_wall_time_seconds: 1800
+network_access: false
+fact_schema: tasks/repo_task_cal_001/facts.yaml

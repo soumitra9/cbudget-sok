@@ -1,0 +1,11 @@
+type: react
+reasoning_instruction: chain_of_draft
+max_words_per_step: 5
+instruction_text: >
+  Think step by step, but only keep a minimum draft for each thinking step,
+  with 5 words at most per reasoning line. On turns that end with a tool call,
+  write a brief draft then emit the tool call. On the final turn, write a brief
+  draft then emit your answer after ####.
+instruction_placement: system_prompt_suffix
+draft_retention_policy: full
+final_answer_separator: "####"

@@ -1,0 +1,12 @@
+{
+  "pass": true,
+  "checks": {
+    "baseline_success_rate": true,
+    "parser_error_rate": true,
+    "compaction_fire_rate": true
+  },
+  "baseline_success_rate": 1.0,
+  "parser_error_rate": 0.0,
+  "compaction_fire_rate": 0.0,
+  "n_runs": 4
+}

@@ -1,0 +1,10 @@
+experiment_id: e1_sensitivity
+description: E1 sensitivity — one alternative compaction threshold, compaction-enabled cells only.
+task_set: coding_confirmatory_v1
+model: qwen2.5_7b_instruct
+policy: react_standard
+matrix:
+  rtk: [off, on]
+  compaction: [tau_alt]
+paired_block: true
+labeled: robustness

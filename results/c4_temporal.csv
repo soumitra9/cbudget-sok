@@ -1,0 +1,13 @@
+method,retention_scenario,turns,base_tokens,gamma,amplified_tokens,evidence_label
+TokenSkip,full,3,313,0.4217,709.0,counterfactual_illustration
+TokenSkip,full,5,313,0.4217,973.0,counterfactual_illustration
+TokenSkip,full,10,313,0.4217,1633.0,counterfactual_illustration
+TokenSkip,final_only,3,313,0.4217,445.0,counterfactual_illustration
+TokenSkip,final_only,5,313,0.4217,445.0,counterfactual_illustration
+TokenSkip,final_only,10,313,0.4217,445.0,counterfactual_illustration
+TokenSkip,hidden_reasoning,3,313,0.4217,511.0,counterfactual_illustration
+TokenSkip,hidden_reasoning,5,313,0.4217,643.0,counterfactual_illustration
+TokenSkip,hidden_reasoning,10,313,0.4217,973.0,counterfactual_illustration
+TokenSkip,compaction_after_turn_k,3,313,0.4217,590.2,counterfactual_illustration
+TokenSkip,compaction_after_turn_k,5,313,0.4217,775.0,counterfactual_illustration
+TokenSkip,compaction_after_turn_k,10,313,0.4217,1237.0,counterfactual_illustration

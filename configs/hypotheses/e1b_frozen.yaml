@@ -1,0 +1,27 @@
+experiment: e1b_rtk_cod
+primary_outcome: cumulative_generated_tokens_per_attempted_task
+min_effect_of_interest: 0.15
+ci_width_target: 0.20
+stopping_rule: fixed_n_blocks_no_early_stopping
+secondary_outcomes:
+  - task_success
+  - cumulative_serialized_prompt_tokens
+  - valid_command_rate
+  - successful_command_rate
+  - redundant_command_rate
+  - repeated_observation_rate
+  - tool_error_recovery_rate
+estimands:
+  raw_interaction: "Y11 - Y10 - Y01 + Y00"
+  log_multiplicative_interaction: "log Y11 - log Y10 - log Y01 + log Y00"
+  success_adjusted_cost: "sum_i C_i / sum_i 1[success_i]"
+statistical_model:
+  default: "GT_trajectory ~ rtk + reasoning + rtk:reasoning + task + seed"
+  robustness: "GT_trajectory ~ rtk + reasoning + rtk:reasoning + (1|task) + (1|seed)"
+hypotheses:
+  primary: "RTK and CoD savings approximately multiplicative (disjoint populations)"
+  secondary_failure: "CoD reduces planning quality or increases retries (behavioral antagonism)"
+interaction_claim:
+  confirmatory_if: "CI excludes zero under pre-registered MDE"
+  exploratory_if: "MDE > 15% GT reduction at Stage 3 power check"
+multiplicity: "One primary; secondaries descriptive with unadjusted CIs"

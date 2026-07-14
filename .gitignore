@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+workspaces/
+runs/
+external/rtk/
+!external/rtk/PINNED_COMMIT
+results/runpod_pod_id.txt
+results/runpod_pod_ip.txt
+.DS_Store

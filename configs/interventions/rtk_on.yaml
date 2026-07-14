@@ -1,0 +1,3 @@
+enabled: true
+rtk_binary: external/rtk/target/release/rtk
+fallback_on_unsupported: true

@@ -1,0 +1,13 @@
+{
+  "frozen_at": "2026-07-14T21:25:06.914454+00:00",
+  "hypothesis_hashes": {
+    "configs/hypotheses/e1_frozen.yaml": "4da48a51fbddc3498fb6b762a45ed2f070c5630a9bc3a98d08ca3c6fe4a117eb",
+    "configs/hypotheses/e1b_frozen.yaml": "c0ec59529bb8bf43617c54852752619e74448464f0532a92bbad9a9f71423613"
+  },
+  "model_config": "configs/models/qwen2.5_7b_instruct.yaml",
+  "task_sets": [
+    "coding_calibration_v1",
+    "coding_confirmatory_v1"
+  ],
+  "seeds": "configs/seeds/seeds_confirmatory_v1.yaml"
+}

@@ -1,0 +1,15 @@
+task_set_id: coding_calibration_v1
+description: Calibration-only tasks; never used for treatment effect estimation.
+tasks:
+  - repo_task_cal_001
+  - repo_task_cal_002
+go_no_go:
+  minimum_baseline_success_rate: 0.70
+  maximum_parser_error_rate: 0.20
+  minimum_compaction_fire_rate: 0.30
+  power_check: true
+  contingency_if_gate_fails:
+    - upgrade model to Qwen2.5-14B or Qwen2.5-Coder-7B
+    - narrow task family to lower-variance subset
+    - lower tau_0 if only compaction_fire_rate fails
+    - do not proceed to Stage 4 freeze without passing all criteria

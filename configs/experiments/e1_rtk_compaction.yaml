@@ -1,0 +1,16 @@
+experiment_id: e1_rtk_compaction
+description: E1 confirmatory 2x2 RTK x compaction.
+task_set: coding_confirmatory_v1
+model: qwen2.5_7b_instruct
+policy: react_standard
+matrix:
+  rtk: [off, on]
+  compaction: [off, on]
+paired_block: true
+cells:
+  baseline:
+    rtk: off
+    compaction: off
+  compaction_only:
+    rtk: off
+    compaction: on

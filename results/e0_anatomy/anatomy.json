@@ -1,0 +1,386 @@
+[
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_001-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_003-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_004-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed07-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed07-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed13-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed13-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed42-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed42-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed99-rtk0-off-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_006-seed99-rtk0-on-standard",
+    "mean_pt": 98,
+    "mean_gt": 11,
+    "peak_occupancy": 76,
+    "task_success": true
+  }
+]

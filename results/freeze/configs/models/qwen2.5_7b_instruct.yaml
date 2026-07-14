@@ -1,0 +1,26 @@
+repository: Qwen/Qwen2.5-7B-Instruct
+revision: null  # pinned at Stage 4 freeze
+tokenizer_revision: null
+dtype: bfloat16
+max_model_len: 32768
+tensor_parallel_size: 1
+gpu_memory_utilization: 0.85
+enable_prefix_caching: true
+chat_template: qwen2
+
+generation:
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens: 2048
+  seed: null
+  stop:
+    - "</tool_call>"
+
+context:
+  model_limit: 32768
+  compaction_trigger: null  # TAU_0_FROZEN_AFTER_CALIBRATION
+  hard_stop: null  # HARD_STOP_FROZEN_AFTER_CALIBRATION
+
+calibration_starting_values:
+  compaction_trigger: 8192
+  hard_stop: 16384
