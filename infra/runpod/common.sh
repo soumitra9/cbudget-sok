@@ -8,6 +8,8 @@ export RUNPOD_SSH_OPTS=(
   -p "$RUNPOD_SSH_PORT"
   -o StrictHostKeyChecking=no
   -o IdentitiesOnly=yes
+  -o ServerAliveInterval=30
+  -o ServerAliveCountMax=10
 )
 
 runpod_ssh() {
@@ -15,5 +17,5 @@ runpod_ssh() {
 }
 
 runpod_rsync() {
-  rsync -e "ssh -i ${RUNPOD_SSH_KEY} -p ${RUNPOD_SSH_PORT} -o StrictHostKeyChecking=no -o IdentitiesOnly=yes" "$@"
+  rsync -e "ssh -i ${RUNPOD_SSH_KEY} -p ${RUNPOD_SSH_PORT} -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10" "$@"
 }

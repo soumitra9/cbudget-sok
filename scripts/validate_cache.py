@@ -22,7 +22,9 @@ def main() -> None:
         text = httpx.get(metrics_url, timeout=10.0).text
         hits = 0
         for line in text.splitlines():
-            if "prefix_cache" in line and "hit" in line and not line.startswith("#"):
+            if line.startswith("#"):
+                continue
+            if line.startswith("vllm:gpu_prefix_cache_hits_total"):
                 try:
                     hits += int(float(line.split()[-1]))
                 except ValueError:

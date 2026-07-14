@@ -14,10 +14,7 @@ if [[ ! -f "$RUNPOD_SSH_PUB" ]]; then
   exit 1
 fi
 
-API_KEY="${RUNPOD_API_KEY:-}"
-if [[ -z "$API_KEY" ]]; then
-  API_KEY=$(python3 -c "import json; from pathlib import Path; print(json.load(Path('$ROOT/../.cursor/mcp.json').open())['mcpServers']['runpod']['env']['RUNPOD_API_KEY'])")
-fi
+API_KEY="${RUNPOD_API_KEY:?RUNPOD_API_KEY env var is required (export it before running)}"
 
 PUBKEY=$(cat "$RUNPOD_SSH_PUB")
 export PUBKEY

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -62,6 +63,8 @@ def maybe_compact(
     assembler: PromptAssembler,
     model: ModelClient,
     summary_prompt_prefix: str,
+    *,
+    emit_event: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> CompactionResult | None:
     if not config.enabled:
         return None
@@ -79,6 +82,8 @@ def maybe_compact(
         state.task_fact_schema,
         candidates,
     )
+    if emit_event is not None:
+        emit_event("compaction_started", {"turn": state.turn, "occupancy": occupancy})
     result = model.generate(prompt, max_tokens=config.max_summary_tokens, temperature=config.temperature)
 
     new_state = AgentState(

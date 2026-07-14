@@ -23,8 +23,11 @@ def check_run(status: dict, events: list[dict]) -> list[str]:
         if e.get("event_type") == "model_request" and "prompt_tokens_serialized" in e
     ]
     for i in range(1, len(pt_values)):
-        if pt_values[i] < 0:
-            failures.append(f"prompt_tokens_serialized negative at event index {i}")
+        if pt_values[i] < pt_values[i - 1]:
+            failures.append(
+                f"prompt_tokens_serialized decreased at event index {i}: "
+                f"{pt_values[i]} < {pt_values[i - 1]}"
+            )
 
     # Invariant: compaction_call tokens appear in total_gt
     compaction_gts = sum(

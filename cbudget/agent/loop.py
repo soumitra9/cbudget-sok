@@ -161,6 +161,14 @@ class AgentLoop:
                 run_failed = True
                 break
 
+            save_checkpoint(
+                self.run_config.run_dir,
+                state=state,
+                state_machine=self.sm,
+                accounting_summary=self.accounting.summary(),
+                model_calls=model_calls,
+            )
+
             prompt = self.assembler.render(state)
             prompt_tokens = count_tokens(prompt)
             occupancy = prompt_tokens
@@ -267,10 +275,10 @@ class AgentLoop:
                     self.assembler,
                     self.model,
                     self.compaction.summary_prompt,
+                    emit_event=self.logger.emit,
                 )
                 if compact_result is None:
                     break
-                self.logger.emit("compaction_started", {"turn": state.turn})
                 self.logger.emit(
                     "compaction_call",
                     {
@@ -297,13 +305,6 @@ class AgentLoop:
                     break
 
             state.turn += 1
-            save_checkpoint(
-                self.run_config.run_dir,
-                state=state,
-                state_machine=self.sm,
-                accounting_summary=self.accounting.summary(),
-                model_calls=model_calls,
-            )
 
         self.sm.transition(RunState.GRADING)
         grader_result = self.workspace.grade(mock=self.use_mock)
