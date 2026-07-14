@@ -9,7 +9,8 @@ from pathlib import Path
 
 import yaml
 
-from cbudget.runner import execute_run, iter_runs
+from cbudget.runner import iter_runs, orchestrate_run
+from scripts.run_cli import add_orchestration_args, maybe_preflight, orchestration_kwargs
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULTS = PROJECT_ROOT / "results"
@@ -91,14 +92,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true", help="Run smoke matrix only")
     parser.add_argument("--pilot", action="store_true", help="Run pilot matrix")
+    add_orchestration_args(parser)
     args = parser.parse_args()
+    maybe_preflight(args)
+    orch = orchestration_kwargs(args)
 
     experiment_id = "calibration_baseline"
     task_set = "coding_calibration_v1"
     seed_set = "seeds_smoke"
 
     for _, task_id, seed, treatment, run_id in iter_runs(experiment_id, task_set, seed_set):
-        result = execute_run(experiment_id, task_id, seed, treatment, run_id)
+        result = orchestrate_run(experiment_id, task_id, seed, treatment, run_id, **orch)
         print(f"{run_id}: success={result.get('task_success')} pt={result.get('total_serialized_pt')}")
 
     runs_dir = PROJECT_ROOT / "runs" / experiment_id

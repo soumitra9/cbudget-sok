@@ -4,6 +4,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=../infra/runpod/common.sh
 source "$ROOT/infra/runpod/common.sh"
+# shellcheck source=../infra/runpod/pins.env
+source "$ROOT/infra/runpod/pins.env"
+
+IMAGE="${RUNPOD_IMAGE:-$POD_IMAGE}"
 
 if [[ ! -f "$RUNPOD_SSH_PUB" ]]; then
   echo "Missing personal SSH public key: $RUNPOD_SSH_PUB" >&2
@@ -17,11 +21,12 @@ fi
 
 PUBKEY=$(cat "$RUNPOD_SSH_PUB")
 export PUBKEY
+export IMAGE
 PAYLOAD=$(python3 -c "
 import json, os
 print(json.dumps({
   'name': 'cbudget-sok-a40',
-  'imageName': 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',
+  'imageName': os.environ.get('IMAGE', 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404'),
   'gpuTypeIds': ['NVIDIA A40'],
   'gpuCount': 1,
   'containerDiskInGb': 60,

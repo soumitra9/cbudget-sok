@@ -21,6 +21,7 @@ from cbudget.interventions.compaction import CompactionConfig, maybe_compact
 from cbudget.interventions.rtk import RTKMode, execute_shell
 from cbudget.models.client import ModelClient
 from cbudget.models.server_config import load_model_config
+from cbudget.run_resume import clear_checkpoint, restore_agent_state, save_checkpoint
 from cbudget.state_machine import FailureState, RunState, StateMachine
 from cbudget.tasks.base import TaskSpec
 from cbudget.tasks.coding_repo import InitialFailureError, WorkspaceManager
@@ -40,6 +41,7 @@ class RunConfig:
     treatment: dict[str, Any]
     run_dir: Path
     project_root: Path
+    resume_checkpoint: dict[str, Any] | None = None
 
 
 class AgentLoop:
@@ -106,37 +108,52 @@ class AgentLoop:
         manifest.write(self.run_config.run_dir / "manifest.json")
         self.logger.emit("run_started", {"task_id": self.task.task_id, "seed": self.run_config.seed})
 
-        self.sm.transition(RunState.ENVIRONMENT_RESET)
-        self.workspace.reset()
-        self.workspace.restore_dependency_cache()
-        self.workspace.apply_task_fixture()
+        checkpoint = self.run_config.resume_checkpoint
+        if checkpoint:
+            state = restore_agent_state(checkpoint)
+            sm_data = checkpoint.get("state_machine", {})
+            self.sm.state = RunState(sm_data.get("state", RunState.RUNNING.value))
+            self.sm.failure_state = None
+            self.sm.transitions = list(sm_data.get("transitions", []))
+            model_calls = int(checkpoint.get("model_calls", 0))
+            acct = checkpoint.get("accounting", {})
+            self.accounting.cumulative_serialized_pt = int(acct.get("total_serialized_pt", 0))
+            self.accounting.cumulative_gt = int(acct.get("total_gt", 0))
+            self.accounting.cumulative_compaction_gt = int(acct.get("total_compaction_gt", 0))
+            self.accounting.peak_occupancy = int(acct.get("peak_occupancy", 0))
+            run_failed = False
+        else:
+            self.sm.transition(RunState.ENVIRONMENT_RESET)
+            self.workspace.reset()
+            self.workspace.restore_dependency_cache()
+            self.workspace.apply_task_fixture()
 
-        if not self.use_mock:
-            self.sm.transition(RunState.MODEL_READY)
-            metrics_before = self.metrics.scrape()
-            (self.run_config.run_dir / "vllm_metrics_before.prom").write_text(metrics_before, encoding="utf-8")
-            self.model.generate("warmup", max_tokens=1, temperature=0.0)
+            if not self.use_mock:
+                self.sm.transition(RunState.MODEL_READY)
+                metrics_before = self.metrics.scrape()
+                (self.run_config.run_dir / "vllm_metrics_before.prom").write_text(metrics_before, encoding="utf-8")
+                self.model.generate("warmup", max_tokens=1, temperature=0.0)
 
-        self.sm.transition(RunState.TASK_INITIALIZED)
-        try:
-            self.workspace.verify_initial_failure(mock=self.use_mock)
-        except InitialFailureError as exc:
-            payload = self.sm.fail(FailureState.TOOL_RUNNER_FAILURE, str(exc))
-            self.logger.emit("run_failed", payload)
-            return {"status": FailureState.TOOL_RUNNER_FAILURE.value, "task_success": False, **self.accounting.summary()}
+            self.sm.transition(RunState.TASK_INITIALIZED)
+            try:
+                self.workspace.verify_initial_failure(mock=self.use_mock)
+            except InitialFailureError as exc:
+                payload = self.sm.fail(FailureState.TOOL_RUNNER_FAILURE, str(exc))
+                self.logger.emit("run_failed", payload)
+                return {"status": FailureState.TOOL_RUNNER_FAILURE.value, "task_success": False, **self.accounting.summary()}
 
-        self.sm.transition(RunState.ACCOUNTING_VERIFIED)
-        base_system = "You are a coding agent with shell access."
-        state = AgentState(
-            task_instruction=self.task.read_instruction(self.run_config.project_root),
-            system_prompt=self.policy.system_prompt(base_system),
-            tool_schema='{"tools":[{"name":"shell"}]}',
-            task_fact_schema=[f.__dict__ for f in self.fact_schema],
-        )
+            self.sm.transition(RunState.ACCOUNTING_VERIFIED)
+            base_system = "You are a coding agent with shell access."
+            state = AgentState(
+                task_instruction=self.task.read_instruction(self.run_config.project_root),
+                system_prompt=self.policy.system_prompt(base_system),
+                tool_schema='{"tools":[{"name":"shell"}]}',
+                task_fact_schema=[f.__dict__ for f in self.fact_schema],
+            )
 
-        self.sm.transition(RunState.RUNNING)
-        model_calls = 0
-        run_failed = False
+            self.sm.transition(RunState.RUNNING)
+            model_calls = 0
+            run_failed = False
 
         while model_calls < self.task.max_model_calls and state.turn < self.task.max_agent_turns:
             if self._wall_time_exceeded():
@@ -181,6 +198,7 @@ class AgentLoop:
                     prompt,
                     max_tokens=int(gen_cfg.get("max_tokens", 2048)),
                     temperature=float(gen_cfg.get("temperature", 0.2)),
+                    messages=self.assembler.to_chat_messages(state),
                 )
             except Exception as exc:
                 self.logger.emit("run_failed", self.sm.fail(FailureState.MODEL_ERROR, str(exc)))
@@ -279,6 +297,13 @@ class AgentLoop:
                     break
 
             state.turn += 1
+            save_checkpoint(
+                self.run_config.run_dir,
+                state=state,
+                state_machine=self.sm,
+                accounting_summary=self.accounting.summary(),
+                model_calls=model_calls,
+            )
 
         self.sm.transition(RunState.GRADING)
         grader_result = self.workspace.grade(mock=self.use_mock)
@@ -311,5 +336,6 @@ class AgentLoop:
         (self.run_config.run_dir / "status.json").write_text(json.dumps(status, indent=2), encoding="utf-8")
         if not run_failed:
             self.sm.transition(RunState.COMPLETED)
+            clear_checkpoint(self.run_config.run_dir)
         self.logger.emit("run_completed", status)
         return status

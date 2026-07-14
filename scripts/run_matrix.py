@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 import itertools
 
-from cbudget.models.server_config import load_experiment_config
-from cbudget.runner import execute_run, iter_runs, resolve_treatment, build_run_id
+from cbudget.runner import build_run_id, iter_runs, orchestrate_run, resolve_treatment
+from cbudget.models.server_config import load_experiment_config, load_seeds, load_task_set
+from scripts.run_cli import add_orchestration_args, maybe_preflight, orchestration_kwargs
 
 
 def _parse_matrix_value(raw: str) -> list[str]:
@@ -16,7 +17,10 @@ def _parse_matrix_value(raw: str) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run a factorial matrix experiment.")
     parser.add_argument("kv", nargs="*", help="experiment=e1_rtk_compaction rtk=off,on compaction=off,on")
+    add_orchestration_args(parser)
     args = parser.parse_args()
+    maybe_preflight(args)
+    orch = orchestration_kwargs(args)
 
     overrides: dict[str, str] = {}
     for item in args.kv:
@@ -32,8 +36,6 @@ def main() -> None:
     matrix = {key: _parse_matrix_value(value) for key, value in overrides.items()}
     experiment = load_experiment_config(experiment_id)
 
-    from cbudget.models.server_config import load_task_set, load_seeds
-
     tasks = load_task_set(task_set)["tasks"]
     seeds = load_seeds(seed_set)
     keys = list(matrix.keys())
@@ -43,7 +45,7 @@ def main() -> None:
     for task_id, seed, cell in itertools.product(tasks, seeds, cells):
         treatment = resolve_treatment(experiment, cell)
         run_id = build_run_id(experiment_id, task_id, seed, treatment)
-        result = execute_run(experiment_id, task_id, seed, treatment, run_id)
+        result = orchestrate_run(experiment_id, task_id, seed, treatment, run_id, **orch)
         print(f"{run_id}: success={result.get('task_success')} pt={result.get('total_serialized_pt')}")
 
 

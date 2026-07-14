@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +18,8 @@ class GraderResult:
 
 def run_grader(command: str, workspace: Path, timeout_seconds: int = 300) -> GraderResult:
     try:
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(workspace)
         completed = subprocess.run(
             command,
             shell=True,
@@ -24,6 +27,7 @@ def run_grader(command: str, workspace: Path, timeout_seconds: int = 300) -> Gra
             capture_output=True,
             text=True,
             timeout=timeout_seconds,
+            env=env,
         )
         return GraderResult(
             success=completed.returncode == 0,

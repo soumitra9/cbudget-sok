@@ -14,6 +14,14 @@ from cbudget.models.server_config import (
     load_seeds,
     load_task_set,
 )
+from cbudget.run_resume import (
+    archive_run_dir,
+    load_checkpoint,
+    load_status,
+    preflight_backend,
+    resolve_disposition,
+    RunDisposition,
+)
 from cbudget.state_machine import RunState, StateMachine
 from cbudget.tasks.base import TaskSpec
 
@@ -83,7 +91,14 @@ def iter_runs(experiment_id: str, task_set: str, seed_set: str, matrix: dict[str
         yield experiment_id, task_id, seed, treatment, run_id
 
 
-def execute_run(experiment_id: str, task_id: str, seed: int, treatment: dict[str, Any], run_id: str) -> dict:
+def execute_run(
+    experiment_id: str,
+    task_id: str,
+    seed: int,
+    treatment: dict[str, Any],
+    run_id: str,
+    resume_checkpoint: dict[str, Any] | None = None,
+) -> dict:
     run_dir = RUNS_ROOT / experiment_id / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     task = TaskSpec.from_config(task_id)
@@ -98,8 +113,46 @@ def execute_run(experiment_id: str, task_id: str, seed: int, treatment: dict[str
             treatment=treatment,
             run_dir=run_dir,
             project_root=PROJECT_ROOT,
+            resume_checkpoint=resume_checkpoint,
         ),
         task,
         state_machine=sm,
     )
     return loop.run()
+
+
+def orchestrate_run(
+    experiment_id: str,
+    task_id: str,
+    seed: int,
+    treatment: dict[str, Any],
+    run_id: str,
+    *,
+    resume: bool = True,
+    retry_failed: bool = False,
+    force: bool = False,
+) -> dict:
+    run_dir = RUNS_ROOT / experiment_id / run_id
+    disposition = resolve_disposition(run_dir, resume=resume, retry_failed=retry_failed, force=force)
+
+    if disposition == RunDisposition.SKIP:
+        status = load_status(run_dir)
+        if status is not None:
+            print(f"{run_id}: skip (already recorded)")
+            return status
+
+    if disposition == RunDisposition.FRESH and run_dir.exists():
+        archive_run_dir(run_dir)
+
+    checkpoint = load_checkpoint(run_dir) if disposition == RunDisposition.RESUME else None
+    if disposition == RunDisposition.RESUME:
+        print(f"{run_id}: resume turn={checkpoint.get('turn') if checkpoint else '?'}")
+
+    return execute_run(
+        experiment_id,
+        task_id,
+        seed,
+        treatment,
+        run_id,
+        resume_checkpoint=checkpoint,
+    )

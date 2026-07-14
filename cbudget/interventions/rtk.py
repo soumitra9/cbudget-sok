@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shlex
 import shutil
 import subprocess
@@ -111,6 +112,9 @@ def execute_shell(
 
 
 def _raw_shell(command: str, cwd: Path | None = None, timeout: int = 300) -> subprocess.CompletedProcess[str]:
+    env = os.environ.copy()
+    if cwd is not None:
+        env["PYTHONPATH"] = str(cwd)
     return subprocess.run(
         command,
         shell=True,
@@ -118,4 +122,5 @@ def _raw_shell(command: str, cwd: Path | None = None, timeout: int = 300) -> sub
         text=True,
         timeout=timeout,
         cwd=str(cwd) if cwd else None,
+        env=env,
     )
