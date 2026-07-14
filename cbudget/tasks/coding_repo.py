@@ -79,6 +79,8 @@ class WorkspaceManager:
             subprocess.run(["git", "clean", "-xfd"], cwd=self.workspace, check=False, capture_output=True)
             return
         subprocess.run(["git", "init"], cwd=self.workspace, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.email", "cbudget@local"], cwd=self.workspace, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "cbudget"], cwd=self.workspace, check=True, capture_output=True)
         subprocess.run(["git", "add", "-A"], cwd=self.workspace, check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", "fixture"], cwd=self.workspace, check=True, capture_output=True)
         subprocess.run(["git", "tag", "-f", self.task.base_commit], cwd=self.workspace, check=False, capture_output=True)
