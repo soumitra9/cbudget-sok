@@ -96,7 +96,7 @@ def orchestrate_run_with_infra_retry(
 ) -> dict[str, Any]:
     for attempt in range(max_retries + 1):
         try:
-            return orchestrate_run(**kwargs)
+            return orchestrate_run(run_id=run_id, **kwargs)
         except INFRA_EXCEPTIONS as exc:
             print(f"INFRA ERROR on {run_id} attempt {attempt + 1}: {exc}", flush=True)
             if attempt >= max_retries:

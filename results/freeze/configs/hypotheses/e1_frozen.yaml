@@ -17,7 +17,8 @@ statistical_model:
   default: "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed"
   robustness: "PT_trajectory ~ rtk + compaction + rtk:compaction + (1|task) + (1|seed)"
 hypotheses:
-  interaction_direction: non_additive_under_specified_policy
+  interaction_direction: negative_synergy_rtk_delays_compaction_trigger
+  interaction_sign: negative_raw_interaction_on_pt_trajectory
   rtk_main_effect: reduces_tool_output_pt
   compaction_main_effect: reduces_history_pt_net_of_summarization_gt
 interaction_claim:

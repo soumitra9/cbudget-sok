@@ -1,1 +1,2 @@
-seeds: [7, 13, 42, 99]
+# Distinct from seeds_smoke [7, 42] so run IDs never collide if experiment_id happens to match.
+seeds: [17, 52]
