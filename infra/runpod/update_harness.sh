@@ -20,7 +20,7 @@ set -euo pipefail
 cd ${CBUDGET_DIR}
 git fetch origin
 git checkout main 2>/dev/null || git checkout -b main
-git reset --hard "origin/\${REF}" 2>/dev/null || git reset --hard "${REF}"
+git reset --hard "${REF}"
 git clean -fd
 echo "Harness updated to \$(git rev-parse --short HEAD)"
 REMOTE
