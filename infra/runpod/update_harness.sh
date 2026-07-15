@@ -17,8 +17,10 @@ REF="${CBUDGET_REPO_REF:-main}"
 echo "Updating harness on ${POD_IP} to ref ${REF}"
 runpod_ssh "root@${POD_IP}" bash -s <<REMOTE
 set -euo pipefail
-cd /workspace/cbudget
+cd ${CBUDGET_DIR}
 git fetch origin
-git checkout "${REF}"
+git checkout main 2>/dev/null || git checkout -b main
+git reset --hard "origin/\${REF}" 2>/dev/null || git reset --hard "${REF}"
+git clean -fd
 echo "Harness updated to \$(git rev-parse --short HEAD)"
 REMOTE
