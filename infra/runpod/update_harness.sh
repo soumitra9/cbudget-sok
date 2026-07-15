@@ -2,6 +2,12 @@
 # Pull a pinned Git SHA onto the pod without re-bootstrapping the full environment.
 set -euo pipefail
 POD_IP="${1:?pod ip required}"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CONN_ENV="${REPO_ROOT}/results/runpod_connection.env"
+if [[ -f "$CONN_ENV" && -z "${RUNPOD_SSH_PORT:-}" ]]; then
+  RUNPOD_SSH_PORT="$(grep '^RUNPOD_SSH_PORT=' "$CONN_ENV" | cut -d= -f2)"
+  export RUNPOD_SSH_PORT
+fi
 # shellcheck source=common.sh
 source "$(dirname "$0")/common.sh"
 # shellcheck source=pins.env

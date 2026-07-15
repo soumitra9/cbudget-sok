@@ -9,25 +9,28 @@ from cbudget.agent.state import AgentState
 from cbudget.agents.base import AgentPolicy
 
 TOOL_CALL_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
-INLINE_SHELL_RE = re.compile(r"(?:^|\n)\s*shell\s*(\{.*\})\s*$", re.DOTALL | re.IGNORECASE)
+QWEN_SHELL_RE = re.compile(
+    r'\bshell\s*\{[^}]*"command"\s*:\s*"((?:\\.|[^"\\])*)"[^}]*\}',
+    re.DOTALL,
+)
 FINAL_ANSWER_RE = re.compile(r"####\s*(.*)", re.DOTALL)
 COMMAND_RE = re.compile(r'"command"\s*:\s*"((?:\\.|[^"\\])*)"')
 
 
 _FORMAT_INSTRUCTIONS = """
-To use the shell tool, respond with exactly this format:
+To run a shell command, respond with exactly:
 Thought: <your reasoning>
-<tool_call>{"name":"shell","arguments":{"command":"<shell command>"}}</tool_call>
+shell{"command":"<the shell command>"}
 
-When the task is fully complete, respond with:
-#### <brief completion summary>
+When fully done, respond with:
+#### <brief summary>
 
-Shell environment rules:
-- The shell is non-interactive (no TTY). Never use nano, vim, vi, or other interactive editors.
-- Edit files with sed, printf/heredoc, cat <<'EOF', or python -c.
-- Prefer one shell command per tool call.
+Shell rules:
+- Non-interactive only (no TTY). Use sed, heredocs, or python -c for edits.
+- One command per turn.
 
-Always use one of those two formats. Never respond with plain prose alone.""".strip()
+Always use one of those two formats. No plain prose.
+""".strip()
 
 
 class ReactPolicy(AgentPolicy):
@@ -46,12 +49,14 @@ class ReactPolicy(AgentPolicy):
                 return {"action": "tool", "command": command, "raw": text}
             return {"action": "parse_error", "raw": text}
 
-        inline_match = INLINE_SHELL_RE.search(text)
-        if inline_match:
-            command = self._extract_command(inline_match.group(1).strip())
-            if command is not None:
-                return {"action": "tool", "command": command, "raw": text}
-            return {"action": "parse_error", "raw": text}
+        qwen_match = QWEN_SHELL_RE.search(text)
+        if qwen_match:
+            try:
+                command = json.loads(f'"{qwen_match.group(1)}"')
+                if isinstance(command, str) and command:
+                    return {"action": "tool", "command": command, "raw": text}
+            except (json.JSONDecodeError, ValueError):
+                pass
 
         final_match = FINAL_ANSWER_RE.search(text)
         if final_match:

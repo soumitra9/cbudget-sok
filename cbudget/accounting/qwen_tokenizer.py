@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import os
+
+os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
+
 from functools import lru_cache
 
 from cbudget.models.server_config import load_model_config
