@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 import itertools
+import json
 import random
+from datetime import datetime, timezone
+from pathlib import Path
 
-from cbudget.runner import build_run_id, orchestrate_run, resolve_treatment
+from cbudget.runner import PROJECT_ROOT, build_run_id, orchestrate_run, resolve_treatment
 from cbudget.models.server_config import load_experiment_config, load_seeds, load_task_set
 from scripts.run_cli import (
     add_orchestration_args,
@@ -21,6 +24,44 @@ def _parse_matrix_value(raw: str) -> list[str]:
 
 
 YAML_BOOL_TO_STR = {True: "on", False: "off"}
+MATRIX_LOG_DIR = PROJECT_ROOT / "results" / "matrix_logs"
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _log_matrix_cell(log_path: Path, *, experiment_id: str, run_id: str, result: dict) -> None:
+    entry = {
+        "timestamp": _utc_now(),
+        "experiment_id": experiment_id,
+        "run_id": run_id,
+        **result,
+    }
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry) + "\n")
+        handle.flush()
+
+
+def _write_matrix_summary(
+    summary_path: Path,
+    *,
+    experiment_id: str,
+    results: list[dict],
+) -> None:
+    success = sum(1 for row in results if row.get("task_success"))
+    infra = sum(1 for row in results if row.get("status") == "INFRASTRUCTURE_ERROR")
+    summary = {
+        "experiment_id": experiment_id,
+        "finished_at": _utc_now(),
+        "n_cells": len(results),
+        "n_success": success,
+        "n_infra_error": infra,
+        "cells": results,
+    }
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
 
 def _normalize_matrix(matrix: dict) -> dict[str, list[str]]:
@@ -62,6 +103,11 @@ def main() -> None:
     values = [matrix[k] for k in keys]
     cells = [dict(zip(keys, combo)) for combo in itertools.product(*values)]
 
+    log_path = MATRIX_LOG_DIR / f"{experiment_id}.jsonl"
+    summary_path = MATRIX_LOG_DIR / f"{experiment_id}_summary.json"
+    cell_results: list[dict] = []
+
+    print(f"Matrix log: {log_path}", flush=True)
     for task_id, seed in itertools.product(tasks, seeds):
         block_cells = list(cells)
         rng = random.Random(f"{experiment_id}:{task_id}:{seed}")
@@ -78,7 +124,24 @@ def main() -> None:
                 treatment=treatment,
                 **orch,
             )
-            print(f"{run_id}: success={result.get('task_success')} pt={result.get('total_serialized_pt')}")
+            row = {
+                "task_id": task_id,
+                "seed": seed,
+                "treatment": cell,
+                "task_success": result.get("task_success"),
+                "status": result.get("status"),
+                "total_serialized_pt": result.get("total_serialized_pt"),
+                "failure_state": result.get("failure_state"),
+            }
+            cell_results.append({"run_id": run_id, **row})
+            _log_matrix_cell(log_path, experiment_id=experiment_id, run_id=run_id, result=row)
+            print(
+                f"{run_id}: success={result.get('task_success')} pt={result.get('total_serialized_pt')}",
+                flush=True,
+            )
+
+    _write_matrix_summary(summary_path, experiment_id=experiment_id, results=cell_results)
+    print(f"Matrix summary: {summary_path}", flush=True)
 
 
 if __name__ == "__main__":

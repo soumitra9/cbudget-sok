@@ -16,14 +16,28 @@ def check_run(status: dict, events: list[dict]) -> list[str]:
     if status.get("peak_occupancy", 0) < 0:
         failures.append("peak_occupancy is negative")
 
-    # Invariant: cumulative_serialized_pt is non-decreasing (check from events)
+    # Invariant: cumulative_serialized_pt is non-decreasing except after compaction.
     pt_values = [
         e["prompt_tokens_serialized"]
         for e in events
         if e.get("event_type") == "model_request" and "prompt_tokens_serialized" in e
     ]
+    compaction_turns = {
+        e.get("turn")
+        for e in events
+        if e.get("event_type") == "compaction_completed" and e.get("turn") is not None
+    }
+    request_turns = [
+        e.get("turn")
+        for e in events
+        if e.get("event_type") == "model_request" and "prompt_tokens_serialized" in e
+    ]
     for i in range(1, len(pt_values)):
         if pt_values[i] < pt_values[i - 1]:
+            turn = request_turns[i] if i < len(request_turns) else None
+            prior_turn = request_turns[i - 1] if i - 1 < len(request_turns) else None
+            if turn in compaction_turns or prior_turn in compaction_turns:
+                continue
             failures.append(
                 f"prompt_tokens_serialized decreased at event index {i}: "
                 f"{pt_values[i]} < {pt_values[i - 1]}"

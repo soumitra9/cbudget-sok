@@ -1,0 +1,10 @@
+{
+  "point_estimate": 2897.4999999999927,
+  "ci_low": -46983.85416666667,
+  "ci_high": 50140.531249999985,
+  "n_bootstrap": 1000,
+  "n_blocks": 12,
+  "n_obs": 48,
+  "estimand": "raw_interaction",
+  "pre_registered": true
+}

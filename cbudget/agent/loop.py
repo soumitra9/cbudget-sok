@@ -145,7 +145,17 @@ class AgentLoop:
             except InitialFailureError as exc:
                 payload = self.sm.fail(FailureState.TOOL_RUNNER_FAILURE, str(exc))
                 self.logger.emit("run_failed", payload)
-                return {"status": FailureState.TOOL_RUNNER_FAILURE.value, "task_success": False, **self.accounting.summary()}
+                summary = {
+                    "status": FailureState.TOOL_RUNNER_FAILURE.value,
+                    "task_success": False,
+                    "state_machine": self.sm.to_status(),
+                    **self.accounting.summary(),
+                }
+                (self.run_config.run_dir / "status.json").write_text(
+                    json.dumps(summary, indent=2),
+                    encoding="utf-8",
+                )
+                return summary
 
             self.sm.transition(RunState.ACCOUNTING_VERIFIED)
             base_system = (
