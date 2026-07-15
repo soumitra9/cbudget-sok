@@ -1,17 +1,17 @@
 method,primary_metric,evidence_label
-RAG-MCP,selection accuracy + prompt tokens,documented
+RAG-MCP,selection accuracy + prompt tokens (20 trials),documented
 MCP-Zero,selection accuracy + avg tokens,documented
-RTK (Rust Token Killer),see_extraction_sheet,documented
-Headroom,tokens by content type,documented
-lean-ctx / LeanCTX,see_extraction_sheet,documented
-Native compaction,see_extraction_sheet,documented
+RTK (Rust Token Killer),"estimated tokens, no quality metric",documented
+Headroom,"tokens by content type, ""same answers"" asserted",documented
+lean-ctx / LeanCTX,tokens by language/mode,documented
+Native compaction,"session continuation, no published metric",documented
 TokenSkip,math accuracy vs compression ratio,documented
-CtrlCoT,see_extraction_sheet,documented
-Extra-CoT,see_extraction_sheet,documented
-Chain of Draft (CoD),see_extraction_sheet,documented
+CtrlCoT,math accuracy vs compression ratio,documented
+Extra-CoT,math accuracy vs compression ratio,documented
+Chain of Draft (CoD),accuracy + output tokens + latency,documented
 SEER,pass@1 + CoT length + loop rate,documented
 Ponytail,LOC + session tokens + cost + time + safety rate,documented
-andrej-karpathy-skills,see_extraction_sheet,documented
+andrej-karpathy-skills,nothing,documented
 LLMLingua-2,QA F1/BERTScore at ratio,documented
 MemGPT-style memory,see_extraction_sheet,documented
 Latent chain-of-thought,see_extraction_sheet,documented

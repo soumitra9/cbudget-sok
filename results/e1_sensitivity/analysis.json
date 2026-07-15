@@ -1,0 +1,128 @@
+{
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1_sensitivity",
+  "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
+  "experiment": "e1_rtk_compaction",
+  "factor_b": "compaction",
+  "outcome_col": "pt",
+  "pre_registered_model": "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed",
+  "n_runs": 72,
+  "status": "ok",
+  "model_fit": {
+    "formula": "PT_trajectory ~ rtk + factor_b + rtk:factor_b + task + seed",
+    "outcome": "pt",
+    "n_obs": 72,
+    "n_params": 14,
+    "r_squared": 0.5484655431859532,
+    "coefficients": {
+      "const": {
+        "estimate": -118.6805555557777,
+        "std_error": 4934.144542716052
+      },
+      "rtk_on": {
+        "estimate": 2082.305555555551,
+        "std_error": 2848.7296799576434
+      },
+      "factor_b_on": {
+        "estimate": -118.6805555553394,
+        "std_error": 4934.1445427160825
+      },
+      "interaction_on": {
+        "estimate": 2082.305555555557,
+        "std_error": 2848.729679957644
+      },
+      "task_repo_task_002": {
+        "estimate": -7823.583333333279,
+        "std_error": 9868.289085432129
+      },
+      "task_repo_task_003": {
+        "estimate": -16168.916666666657,
+        "std_error": 9868.289085432138
+      },
+      "task_repo_task_004": {
+        "estimate": -1393.4999999999698,
+        "std_error": 9868.28908543213
+      },
+      "task_repo_task_005": {
+        "estimate": 5212.333333333334,
+        "std_error": 9868.289085432136
+      },
+      "task_repo_task_006": {
+        "estimate": 9569.000000000018,
+        "std_error": 9868.289085432134
+      },
+      "seed_13": {
+        "estimate": -1.0751067754910179e-11,
+        "std_error": 9868.289085432132
+      },
+      "seed_17": {
+        "estimate": 51766.416666666635,
+        "std_error": 9868.289085432136
+      },
+      "seed_42": {
+        "estimate": -2.643985136049319e-11,
+        "std_error": 9868.289085432136
+      },
+      "seed_52": {
+        "estimate": 42025.91666666667,
+        "std_error": 9868.289085432134
+      },
+      "seed_99": {
+        "estimate": -1.7799651693650373e-11,
+        "std_error": 9868.289085432129
+      }
+    }
+  },
+  "estimands": {
+    "raw_interaction": {
+      "formula": "Y11 - Y10 - Y01 + Y00",
+      "cell_means": {
+        "Y00": NaN,
+        "Y01": 13627.25,
+        "Y10": NaN,
+        "Y11": 17791.86111111111
+      },
+      "value": NaN
+    },
+    "log_multiplicative_interaction": {
+      "formula": "log Y11 - log Y10 - log Y01 + log Y00",
+      "cell_means": {
+        "Y00": NaN,
+        "Y01": 13627.25,
+        "Y10": NaN,
+        "Y11": 17791.86111111111
+      },
+      "value": NaN
+    },
+    "success_adjusted_cost": {
+      "formula": "sum_i C_i / sum_i 1[success_i]",
+      "by_cell": {
+        "Y00": NaN,
+        "Y01": 18169.666666666668,
+        "Y10": NaN,
+        "Y11": 22086.44827586207
+      },
+      "overall": 20198.0,
+      "interaction_on_sac": NaN
+    }
+  },
+  "raw_interaction_bootstrap": {
+    "point_estimate": NaN,
+    "ci_low": NaN,
+    "ci_high": NaN,
+    "n_bootstrap": 1000,
+    "n_blocks": 36,
+    "n_obs": 72,
+    "estimand": "raw_interaction",
+    "pre_registered": true
+  },
+  "confirmatory_interaction_coefficient": {
+    "estimate": 2082.305555555557,
+    "std_error": 2848.729679957644
+  },
+  "hypothesis_direction": {
+    "interaction_direction": "negative_synergy_rtk_delays_compaction_trigger",
+    "interaction_sign": "negative_raw_interaction_on_pt_trajectory",
+    "rtk_main_effect": "reduces_tool_output_pt",
+    "compaction_main_effect": "reduces_history_pt_net_of_summarization_gt"
+  }
+}

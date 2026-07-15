@@ -1,14 +1,14 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='600' height='300'>
-<rect x='40' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='40' y='50' width='60' height='200' fill='#4472C4'/>
 <text x='50' y='270' font-size='10'>baseline</text>
-<rect x='120' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='120' y='132.74' width='60' height='117.26' fill='#4472C4'/>
 <text x='130' y='270' font-size='10'>compaction_only</text>
-<rect x='200' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='200' y='50' width='60' height='200' fill='#4472C4'/>
 <text x='210' y='270' font-size='10'>baseline</text>
-<rect x='280' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='280' y='50' width='60' height='200' fill='#4472C4'/>
 <text x='290' y='270' font-size='10'>compaction_only</text>
-<rect x='360' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='360' y='196.82' width='60' height='53.18' fill='#4472C4'/>
 <text x='370' y='270' font-size='10'>baseline</text>
-<rect x='440' y='248.04' width='60' height='1.96' fill='#4472C4'/>
+<rect x='440' y='50' width='60' height='200' fill='#4472C4'/>
 <text x='450' y='270' font-size='10'>compaction_only</text>
 </svg>

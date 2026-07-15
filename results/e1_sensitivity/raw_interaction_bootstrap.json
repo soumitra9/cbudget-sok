@@ -1,0 +1,13 @@
+{
+  "point_estimate": NaN,
+  "ci_low": NaN,
+  "ci_high": NaN,
+  "n_bootstrap": 1000,
+  "n_blocks": 36,
+  "n_obs": 72,
+  "estimand": "raw_interaction",
+  "pre_registered": true,
+  "ci_lower": NaN,
+  "ci_upper": NaN,
+  "ci_width": NaN
+}

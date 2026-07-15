@@ -1,0 +1,13 @@
+{
+  "point_estimate": -5.055555555555486,
+  "ci_low": -406.6284722222222,
+  "ci_high": 374.4451388888889,
+  "n_bootstrap": 1000,
+  "n_blocks": 36,
+  "n_obs": 144,
+  "estimand": "raw_interaction",
+  "pre_registered": true,
+  "ci_lower": -406.6284722222222,
+  "ci_upper": 374.4451388888889,
+  "ci_width": 781.0736111111111
+}
