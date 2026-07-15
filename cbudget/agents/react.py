@@ -9,6 +9,7 @@ from cbudget.agent.state import AgentState
 from cbudget.agents.base import AgentPolicy
 
 TOOL_CALL_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
+INLINE_SHELL_RE = re.compile(r"(?:^|\n)\s*shell\s*(\{.*\})\s*$", re.DOTALL | re.IGNORECASE)
 FINAL_ANSWER_RE = re.compile(r"####\s*(.*)", re.DOTALL)
 COMMAND_RE = re.compile(r'"command"\s*:\s*"((?:\\.|[^"\\])*)"')
 
@@ -41,6 +42,13 @@ class ReactPolicy(AgentPolicy):
         if tool_matches:
             raw_payload = tool_matches[-1].group(1).strip()
             command = self._extract_command(raw_payload)
+            if command is not None:
+                return {"action": "tool", "command": command, "raw": text}
+            return {"action": "parse_error", "raw": text}
+
+        inline_match = INLINE_SHELL_RE.search(text)
+        if inline_match:
+            command = self._extract_command(inline_match.group(1).strip())
             if command is not None:
                 return {"action": "tool", "command": command, "raw": text}
             return {"action": "parse_error", "raw": text}
