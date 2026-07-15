@@ -1,14 +1,14 @@
 {
-  "pass": false,
+  "pass": true,
   "checks": {
-    "baseline_success_rate": false,
-    "parser_error_rate": false,
+    "baseline_success_rate": true,
+    "parser_error_rate": true,
     "compaction_fire_rate": true
   },
-  "baseline_success_rate": 0.5,
-  "parser_error_rate": 0.3333333333333333,
+  "baseline_success_rate": 1.0,
+  "parser_error_rate": 0.0,
   "compaction_fire_rate": 0.0,
-  "n_runs": 6,
-  "backend": "mock",
+  "n_runs": 4,
+  "backend": "vllm",
   "note": "Mock-backend gate results are not valid for go/no-go; re-run with CBUDGET_BACKEND=vllm."
 }

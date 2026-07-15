@@ -1,7 +1,5 @@
 run_id,task_success,total_serialized_pt,total_gt,peak_occupancy
-calibration_baseline-repo_task_cal_002-seed42-rtk0-off-standard.attempt01,False,2891,2681,648
-calibration_baseline-repo_task_cal_002-seed42-rtk0-off-standard,False,3442,865,628
-calibration_baseline-repo_task_cal_001-seed07-rtk0-off-standard,True,1258,308,362
-calibration_baseline-repo_task_cal_001-seed42-rtk0-off-standard,True,2308,459,459
-calibration_baseline-repo_task_cal_002-seed07-rtk0-off-standard,True,1568,376,342
-calibration_baseline-repo_task_cal_001-seed42-rtk0-off-standard.attempt01,False,3539,2613,680
+calibration_baseline-repo_task_cal_002-seed42-rtk0-off-standard,True,3940,502,1005
+calibration_baseline-repo_task_cal_002-seed07-rtk0-off-standard,True,3877,423,996
+calibration_baseline-repo_task_cal_001-seed42-rtk0-off-standard,True,4943,545,1096
+calibration_baseline-repo_task_cal_001-seed07-rtk0-off-standard,True,4849,503,1059

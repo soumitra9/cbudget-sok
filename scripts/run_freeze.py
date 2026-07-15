@@ -33,7 +33,7 @@ def main() -> None:
     manifest = {
         "frozen_at": timestamp,
         "hypothesis_hashes": hashes,
-        "model_config": "configs/models/qwen2.5_7b_instruct.yaml",
+        "model_config": "configs/models/qwen2.5_coder_7b_instruct.yaml",
         "task_sets": ["coding_calibration_v1", "coding_confirmatory_v1"],
         "seeds": "configs/seeds/seeds_confirmatory_v1.yaml",
     }
@@ -42,7 +42,7 @@ def main() -> None:
     for rel in (
         "configs/hypotheses/e1_frozen.yaml",
         "configs/hypotheses/e1b_frozen.yaml",
-        "configs/models/qwen2.5_7b_instruct.yaml",
+        "configs/models/qwen2.5_coder_7b_instruct.yaml",
         "configs/tasks/coding_confirmatory_v1.yaml",
         "configs/seeds/seeds_confirmatory_v1.yaml",
     ):
