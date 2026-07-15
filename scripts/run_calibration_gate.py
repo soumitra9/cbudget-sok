@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from cbudget.models.server_config import load_task_set
+from cbudget.models.server_config import load_experiment_config, load_task_set
 from cbudget.runner import iter_runs, orchestrate_run
 from scripts.run_cli import (
     add_orchestration_args,
@@ -25,7 +25,7 @@ RESULTS = PROJECT_ROOT / "results"
 
 def evaluate_gate(runs_dir: Path, task_set_cfg: dict) -> dict:
     gate = task_set_cfg.get("go_no_go", {})
-    statuses = [p for p in runs_dir.rglob("status.json") if ".attempt" not in p.parts]
+    statuses = [p for p in runs_dir.rglob("status.json") if ".attempt" not in str(p)]
     if not statuses:
         return {"pass": False, "reason": "no runs found"}
 
@@ -79,7 +79,7 @@ def evaluate_gate(runs_dir: Path, task_set_cfg: dict) -> dict:
 
 def write_pilot_csv(runs_dir: Path, output: Path) -> None:
     rows = []
-    for status_path in [p for p in runs_dir.rglob("status.json") if ".attempt" not in p.parts]:
+    for status_path in [p for p in runs_dir.rglob("status.json") if ".attempt" not in str(p)]:
         data = json.loads(status_path.read_text(encoding="utf-8"))
         rows.append(
             {
@@ -107,6 +107,10 @@ def main() -> None:
     experiment_id = "calibration_baseline"
     task_set = "coding_calibration_v1"
     seed_set = "seeds_smoke"
+
+    os.environ["CBUDGET_MODEL_CONFIG"] = load_experiment_config(experiment_id).get(
+        "model", "qwen2.5_7b_instruct"
+    )
 
     tasks = load_task_set(task_set)["tasks"]
     maybe_preflight(args, task_ids=tasks)

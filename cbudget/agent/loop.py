@@ -20,7 +20,7 @@ from cbudget.agents.react import ReactPolicy
 from cbudget.interventions.compaction import CompactionConfig, maybe_compact
 from cbudget.interventions.rtk import RTKMode, execute_shell
 from cbudget.models.client import ModelClient
-from cbudget.models.server_config import load_model_config
+from cbudget.models.server_config import load_experiment_config, load_model_config
 from cbudget.run_resume import clear_checkpoint, restore_agent_state, save_checkpoint
 from cbudget.state_machine import FailureState, RunState, StateMachine
 from cbudget.tasks.base import TaskSpec
@@ -57,7 +57,10 @@ class AgentLoop:
         self.logger = EventLogger(run_config.run_dir, run_config.run_id)
         self.accounting = TokenAccounting()
         self.assembler = PromptAssembler()
-        self.model_cfg = load_model_config()
+        experiment = load_experiment_config(run_config.experiment_id)
+        model_name = experiment.get("model", "qwen2.5_7b_instruct")
+        os.environ["CBUDGET_MODEL_CONFIG"] = model_name
+        self.model_cfg = load_model_config(model_name)
         self.use_mock = os.environ.get("CBUDGET_BACKEND", "mock").lower() == "mock"
         self.model = ModelClient(seed=run_config.seed, use_mock=self.use_mock)
         self.workspace = WorkspaceManager(run_config.project_root, task)

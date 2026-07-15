@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +21,9 @@ def resolve_config(*parts: str) -> Path:
     return CONFIG_ROOT.joinpath(*parts)
 
 
-def load_model_config(name: str = "qwen2.5_7b_instruct") -> dict[str, Any]:
+def load_model_config(name: str | None = None) -> dict[str, Any]:
+    if name is None:
+        name = os.environ.get("CBUDGET_MODEL_CONFIG", "qwen2.5_7b_instruct")
     return load_yaml(resolve_config("models", f"{name}.yaml"))
 
 

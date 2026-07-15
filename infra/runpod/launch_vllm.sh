@@ -3,6 +3,11 @@ set -euo pipefail
 MODEL_CONFIG="${1:?model config path required}"
 POD_IP="${2:?pod ip required}"
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CONN_ENV="${REPO_ROOT}/results/runpod_connection.env"
+if [[ -f "$CONN_ENV" && -z "${RUNPOD_SSH_PORT:-}" ]]; then
+  RUNPOD_SSH_PORT="$(grep '^RUNPOD_SSH_PORT=' "$CONN_ENV" | cut -d= -f2)"
+  export RUNPOD_SSH_PORT
+fi
 # shellcheck source=common.sh
 source "$(dirname "$0")/common.sh"
 # shellcheck source=pins.env
