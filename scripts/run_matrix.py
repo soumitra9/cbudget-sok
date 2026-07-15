@@ -20,12 +20,12 @@ def _parse_matrix_value(raw: str) -> list[str]:
     return [part.strip() for part in raw.split(",") if part.strip()]
 
 
-BOOL_MAP = {True: "on", False: "off", "true": "on", "false": "off", "True": "on", "False": "off"}
+YAML_BOOL_TO_STR = {True: "on", False: "off"}
 
 
 def _normalize_matrix(matrix: dict) -> dict[str, list[str]]:
     return {
-        key: [BOOL_MAP.get(v, str(v)) for v in vals]
+        key: [YAML_BOOL_TO_STR.get(v, str(v)) for v in vals]
         for key, vals in matrix.items()
     }
 
