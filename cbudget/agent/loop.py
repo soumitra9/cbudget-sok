@@ -73,6 +73,7 @@ class AgentLoop:
             enabled=run_config.treatment.get("compaction") not in (None, "off", False),
             trigger_tokens=int(
                 run_config.treatment.get("compaction_trigger")
+                or self.model_cfg.get("context", {}).get("compaction_trigger")
                 or self.model_cfg.get("calibration_starting_values", {}).get("compaction_trigger", 8192)
             ),
             hot_tail_tokens=int(run_config.treatment.get("hot_tail_tokens", 2000)),
@@ -82,6 +83,7 @@ class AgentLoop:
             summary_prompt=run_config.treatment.get("summary_prompt", ""),
             hard_stop=int(
                 run_config.treatment.get("hard_stop")
+                or self.model_cfg.get("context", {}).get("hard_stop")
                 or self.model_cfg.get("calibration_starting_values", {}).get("hard_stop", 16384)
             ),
         )

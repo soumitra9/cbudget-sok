@@ -18,9 +18,9 @@ generation:
 
 context:
   model_limit: 32768
-  compaction_trigger: 8192
+  compaction_trigger: 4096
   hard_stop: 16384
 
 calibration_starting_values:
-  compaction_trigger: 8192
+  compaction_trigger: 4096
   hard_stop: 16384
