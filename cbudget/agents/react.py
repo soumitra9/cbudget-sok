@@ -53,12 +53,9 @@ class ReactPolicy(AgentPolicy):
 
         qwen_match = QWEN_SHELL_RE.search(text)
         if qwen_match:
-            try:
-                command = json.loads(f'"{qwen_match.group(1)}"')
-                if isinstance(command, str) and command:
-                    return {"action": "tool", "command": command, "raw": text}
-            except (json.JSONDecodeError, ValueError):
-                pass
+            command = self._unescape_captured_string(qwen_match.group(1))
+            if command:
+                return {"action": "tool", "command": command, "raw": text}
 
         bash_match = BASH_BLOCK_RE.search(text)
         if bash_match:
@@ -71,6 +68,21 @@ class ReactPolicy(AgentPolicy):
             return {"action": "final", "answer": final_match.group(1).strip(), "raw": text}
 
         return {"action": "parse_error", "raw": text}
+
+    @staticmethod
+    def _unescape_captured_string(raw: str) -> str | None:
+        if not raw:
+            return None
+        try:
+            decoded = json.loads(f'"{raw}"')
+            if isinstance(decoded, str) and decoded:
+                return decoded
+        except json.JSONDecodeError:
+            pass
+        try:
+            return raw.encode("utf-8").decode("unicode_escape")
+        except UnicodeDecodeError:
+            return raw
 
     @staticmethod
     def _extract_command(raw_payload: str) -> str | None:
