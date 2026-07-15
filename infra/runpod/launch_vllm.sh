@@ -25,6 +25,8 @@ if [[ ! -x "\$VLLM_BIN" ]]; then
 fi
 pkill -f "vllm serve" || true
 sleep 2
+mkdir -p /workspace/.cache/huggingface
+export HF_HOME=/workspace/.cache/huggingface
 nohup "\$VLLM_BIN" serve ${REPO} \\
   ${REVISION:+--revision ${REVISION} } \\
   --dtype bfloat16 \\
