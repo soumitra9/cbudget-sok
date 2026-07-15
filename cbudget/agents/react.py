@@ -21,6 +21,11 @@ Thought: <your reasoning>
 When the task is fully complete, respond with:
 #### <brief completion summary>
 
+Shell environment rules:
+- The shell is non-interactive (no TTY). Never use nano, vim, vi, or other interactive editors.
+- Edit files with sed, printf/heredoc, cat <<'EOF', or python -c.
+- Prefer one shell command per tool call.
+
 Always use one of those two formats. Never respond with plain prose alone.""".strip()
 
 
@@ -32,9 +37,9 @@ class ReactPolicy(AgentPolicy):
         return f"{base}\n\n{_FORMAT_INSTRUCTIONS}"
 
     def parse_response(self, text: str, state: AgentState) -> dict:
-        tool_match = TOOL_CALL_RE.search(text)
-        if tool_match:
-            raw_payload = tool_match.group(1).strip()
+        tool_matches = list(TOOL_CALL_RE.finditer(text))
+        if tool_matches:
+            raw_payload = tool_matches[-1].group(1).strip()
             command = self._extract_command(raw_payload)
             if command is not None:
                 return {"action": "tool", "command": command, "raw": text}

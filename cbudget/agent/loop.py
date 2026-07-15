@@ -143,7 +143,10 @@ class AgentLoop:
                 return {"status": FailureState.TOOL_RUNNER_FAILURE.value, "task_success": False, **self.accounting.summary()}
 
             self.sm.transition(RunState.ACCOUNTING_VERIFIED)
-            base_system = "You are a coding agent with shell access."
+            base_system = (
+                "You are a coding agent with non-interactive shell access. "
+                "The environment has no TTY; use sed, heredocs, or python for file edits."
+            )
             state = AgentState(
                 task_instruction=self.task.read_instruction(self.run_config.project_root),
                 system_prompt=self.policy.system_prompt(base_system),
