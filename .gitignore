@@ -9,5 +9,8 @@ results/runpod_pod_id.txt
 results/runpod_pod_ip.txt
 .DS_Store
 
+# Cursor IDE (local only)
+.cursor/
+
 # Paper draft (keep local only)
 paper/
