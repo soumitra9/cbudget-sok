@@ -20,6 +20,16 @@ def _parse_matrix_value(raw: str) -> list[str]:
     return [part.strip() for part in raw.split(",") if part.strip()]
 
 
+BOOL_MAP = {True: "on", False: "off", "true": "on", "false": "off", "True": "on", "False": "off"}
+
+
+def _normalize_matrix(matrix: dict) -> dict[str, list[str]]:
+    return {
+        key: [BOOL_MAP.get(v, str(v)) for v in vals]
+        for key, vals in matrix.items()
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run a factorial matrix experiment.")
     parser.add_argument("kv", nargs="*", help="experiment=e1_rtk_compaction rtk=off,on compaction=off,on")
@@ -45,6 +55,7 @@ def main() -> None:
     experiment = load_experiment_config(experiment_id)
     if not matrix and "matrix" in experiment:
         matrix = experiment["matrix"]
+    matrix = _normalize_matrix(matrix)
 
     seeds = load_seeds(seed_set)
     keys = list(matrix.keys())

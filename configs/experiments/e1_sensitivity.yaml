@@ -4,7 +4,7 @@ task_set: coding_confirmatory_v1
 model: qwen2.5_coder_7b_instruct
 policy: react_standard
 matrix:
-  rtk: [off, on]
+  rtk: ["off", "on"]
   compaction: [tau_alt]
 paired_block: true
 labeled: robustness
