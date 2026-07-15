@@ -15,7 +15,7 @@ def main() -> None:
     results.mkdir(parents=True, exist_ok=True)
 
     lines = ["# SoK Context Budget — Results Tables", ""]
-    for name in ("e1", "e1b", "e0_anatomy"):
+    for name in ("e1", "e1b", "e1_sensitivity", "e0_anatomy"):
         path = results / name
         if path.exists():
             lines.append(f"## {name}")

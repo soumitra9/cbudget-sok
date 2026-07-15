@@ -73,6 +73,17 @@ def main() -> None:
     run([
         sys.executable,
         "-m",
+        "analysis.estimate_interactions",
+        "--runs",
+        str(PROJECT_ROOT / "runs/e1_sensitivity"),
+        "--hypothesis",
+        "configs/hypotheses/e1_frozen.yaml",
+        "--output",
+        str(RESULTS / "e1_sensitivity"),
+    ])
+    run([
+        sys.executable,
+        "-m",
         "scripts.simulate_provider_cost",
         "--runs",
         str(PROJECT_ROOT / "runs"),
