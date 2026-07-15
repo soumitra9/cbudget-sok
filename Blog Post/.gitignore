@@ -1,0 +1,6 @@
+# Cursor / editor internals
+.specstory/
+.cursorindexingignore
+
+# macOS
+.DS_Store

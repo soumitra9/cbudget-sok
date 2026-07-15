@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What fills the context window</title>
+<style>
+  :root{
+    --bg:#0B0D10;
+    --panel:#14171C;
+    --panel-2:#181C22;
+    --border:#262B33;
+    --text:#E7E9EC;
+    --text-dim:#8A93A1;
+    --text-faint:#565F6C;
+
+    --O:#5C6470;   /* overhead: system prompt + reserved output */
+    --S:#E0A458;   /* tool / MCP schemas */
+    --H:#4FA6A0;   /* accumulated history */
+    --R:#9B87F5;   /* reasoning tokens generated this turn */
+    --OUT:#58D68D; /* this turn's action/answer output */
+    --danger:#F0555C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    padding:32px 20px 60px;
+  }
+  .mono{font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;}
+
+  .wrap{max-width:920px;margin:0 auto;}
+
+  header{margin-bottom:28px;}
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--text-faint); margin-bottom:10px;
+  }
+  h1{
+    font-size:26px; line-height:1.25; font-weight:650; margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  .sub{color:var(--text-dim); font-size:14.5px; line-height:1.55; max-width:620px;}
+
+  /* ---- legend ---- */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px 18px;
+    margin:22px 0 24px;
+    padding:14px 16px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+  }
+  .legend-item{display:flex; align-items:flex-start; gap:8px; font-size:12.5px; max-width:250px;}
+  .swatch{width:10px;height:10px;border-radius:2px;margin-top:3px;flex:none;}
+  .legend-item b{color:var(--text); font-weight:600;}
+  .legend-item span{color:var(--text-dim); display:block; font-size:11.5px; line-height:1.4;}
+
+  /* ---- controls ---- */
+  .controls{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    margin-bottom:16px;
+  }
+  .toggle-row{display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-dim);}
+  .switch{
+    position:relative; width:38px; height:21px; border-radius:11px;
+    background:#2A2F38; border:1px solid var(--border); cursor:pointer; flex:none;
+    transition:background .18s;
+  }
+  .switch.on{background:#3A6E68;}
+  .switch::after{
+    content:""; position:absolute; top:2px; left:2px; width:15px; height:15px;
+    border-radius:50%; background:#C9CDD3; transition:transform .18s;
+  }
+  .switch.on::after{transform:translateX(17px); background:var(--H);}
+  .budget-label{font-size:12px; color:var(--text-faint);}
+  .budget-label b{color:var(--text);}
+
+  /* ---- chart ---- */
+  .chart{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px 20px 16px;
+    position:relative;
+  }
+  .ceiling-wrap{position:relative;}
+  .ceiling-line{
+    position:absolute; left:0; right:0; height:0;
+    border-top:1.5px dashed #4A5160;
+    z-index:3;
+  }
+  .ceiling-tag{
+    position:absolute; right:0; transform:translateY(-100%);
+    font-size:10.5px; color:var(--text-faint); padding-bottom:3px;
+  }
+
+  .bars{
+    display:flex; align-items:flex-end; gap:16px;
+    height:280px; position:relative; z-index:1;
+    padding-top:6px;
+  }
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;}
+  .bar{
+    width:100%; max-width:64px; display:flex; flex-direction:column-reverse;
+    border-radius:3px 3px 0 0; overflow:visible; cursor:pointer;
+    position:relative;
+  }
+  .seg{
+    width:100%; transition:opacity .15s, filter .15s;
+    border-top:1px solid rgba(0,0,0,.25);
+  }
+  .bar:hover .seg{filter:brightness(1.15);}
+  .overflow-tag{
+    position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+    font-size:10px; color:var(--danger); white-space:nowrap; margin-bottom:3px;
+    font-family:"JetBrains Mono",monospace; font-weight:600;
+  }
+  .turn-label{
+    margin-top:9px; font-size:11.5px; color:var(--text-dim);
+    font-family:"JetBrains Mono",monospace;
+  }
+  .turn-total{font-size:10.5px; color:var(--text-faint); margin-top:1px;}
+
+  /* ---- detail panel ---- */
+  .detail{
+    margin-top:18px; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:10px; padding:16px 18px; min-height:96px;
+  }
+  .detail-title{font-size:13px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .detail-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:5px 0; font-size:12.5px; border-bottom:1px solid #1D2129;
+  }
+  .detail-row:last-child{border-bottom:none;}
+  .detail-row .k{display:flex; align-items:center; gap:8px; color:var(--text-dim);}
+  .detail-row .v{font-family:"JetBrains Mono",monospace; color:var(--text);}
+  .detail-hint{color:var(--text-faint); font-size:12px;}
+
+  footer{margin-top:22px; font-size:12px; color:var(--text-faint); line-height:1.6;}
+  footer code{
+    background:#1B1F26; padding:1px 5px; border-radius:4px; font-size:11.5px;
+    color:var(--text-dim); font-family:"JetBrains Mono",monospace;
+  }
+
+  @media (max-width:640px){
+    .bars{gap:8px; height:220px;}
+    .bar{max-width:36px;}
+    h1{font-size:21px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">context accounting · agentic multi-turn session</div>
+    <h1>What actually fills the context window, turn by turn</h1>
+    <p class="sub">Six turns of a ReAct-style agent conversation (Thought → Action → Observation loops). Every category below is real token cost — click a bar to see the exact split for that turn.</p>
+  </header>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="controls">
+    <div class="toggle-row">
+      <div class="switch" id="compressToggle"></div>
+      <span>Compress reasoning before it re-enters history (θ<sub>R</sub> folded into H at 25%)</span>
+    </div>
+    <div class="budget-label">Budget ceiling: <b class="mono" id="budgetVal">8,000</b> tokens</div>
+  </div>
+
+  <div class="chart">
+    <div class="ceiling-wrap" id="ceilingWrap">
+      <div class="ceiling-line" id="ceilingLine"></div>
+      <div class="ceiling-tag" id="ceilingTag" style="bottom:auto;">B − O</div>
+      <div class="bars" id="bars"></div>
+    </div>
+  </div>
+
+  <div class="detail" id="detail">
+    <div class="detail-title">Turn breakdown</div>
+    <div class="detail-hint">Click any bar above to inspect what it's made of.</div>
+  </div>
+
+  <footer>
+    O = fixed overhead (system prompt + reserved output). S = tool/MCP schemas, re-sent every turn regardless of use. H = everything accumulated from prior turns (past user messages, past reasoning, past actions, past tool observations). R = new reasoning tokens generated this turn. Out = this turn's action call or final answer text.
+    <br><br>
+    Formalization: <code>B = S + H + R + O</code>, with H<sub>t</sub> = H<sub>t-1</sub> + R<sub>t-1</sub> + Out<sub>t-1</sub> + (new user/observation input) — reasoning and output tokens don't vanish after being generated, they become next turn's history.
+  </footer>
+
+</div>
+
+<script>
+const CATS = [
+  {k:'O',   name:'Overhead',  desc:'System prompt + reserved output budget. Fixed every turn.'},
+  {k:'S',   name:'Tool schemas', desc:'Full MCP tool definitions, re-sent every turn whether or not they get used.'},
+  {k:'H',   name:'History', desc:'Everything carried over from prior turns.'},
+  {k:'R',   name:'Reasoning', desc:'New Thought tokens the model generates this turn.'},
+  {k:'OUT', name:'Output', desc:'The tool call or final answer text produced this turn.'},
+];
+
+const legend = document.getElementById('legend');
+CATS.forEach(c=>{
+  const el = document.createElement('div');
+  el.className='legend-item';
+  el.innerHTML = `<div class="swatch" style="background:var(--${c.k})"></div>
+    <div><b>${c.k}</b> — ${c.name}<span>${c.desc}</span></div>`;
+  legend.appendChild(el);
+});
+
+// Simulated 6-turn ReAct session, roughly realistic proportions.
+const O = 800;
+const S_full = 2400; // full tool schema cost, constant per turn (not compressed in this demo)
+const rawTurns = [
+  {user: 90,  reasoning: 260, obs: 180, out: 70},
+  {user: 60,  reasoning: 340, obs: 420, out: 90},
+  {user: 40,  reasoning: 300, obs: 260, out: 60},
+  {user: 110, reasoning: 480, obs: 510, out: 140},
+  {user: 50,  reasoning: 260, obs: 190, out: 80},
+  {user: 70,  reasoning: 390, obs: 330, out: 100},
+];
+const BUDGET = 8000;
+
+let compress = false;
+
+function computeTurns(){
+  let H = 0;
+  const out = [];
+  for(const t of rawTurns){
+    const S = S_full;
+    const R = t.reasoning;
+    const Out = t.out;
+    const thisH = H + t.user + t.obs; // history entering THIS turn (prior R/Out already folded in below)
+    const total = O + S + thisH + R + Out;
+    out.push({O, S, H: thisH, R, Out, total});
+    // fold this turn's reasoning+output into history for NEXT turn
+    const foldedR = compress ? Math.round(R * 0.25) : R;
+    H = thisH + foldedR + Out;
+  }
+  return out;
+}
+
+const barsEl = document.getElementById('bars');
+const detailEl = document.getElementById('detail');
+const ceilingLine = document.getElementById('ceilingLine');
+const ceilingTag = document.getElementById('ceilingTag');
+const toggle = document.getElementById('compressToggle');
+
+function render(){
+  const turns = computeTurns();
+  const maxTotal = Math.max(BUDGET, ...turns.map(t=>t.total));
+  const chartHeight = 280;
+  const scale = chartHeight / (maxTotal * 1.08);
+
+  ceilingLine.style.bottom = (BUDGET*scale)+'px';
+  ceilingTag.style.bottom = (BUDGET*scale)+'px';
+  ceilingLine.style.top = 'auto';
+
+  barsEl.innerHTML = '';
+  turns.forEach((t, i)=>{
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = (t.total*scale)+'px';
+
+    ['O','S','H','R','Out'].forEach(key=>{
+      const val = key==='Out' ? t.Out : t[key];
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      const varKey = key==='Out' ? 'OUT' : key;
+      seg.style.background = `var(--${varKey})`;
+      seg.style.height = (val*scale)+'px';
+      bar.appendChild(seg);
+    });
+
+    if(t.total > BUDGET){
+      const tag = document.createElement('div');
+      tag.className = 'overflow-tag';
+      tag.textContent = '+' + (t.total-BUDGET).toLocaleString() + ' over';
+      bar.appendChild(tag);
+      bar.style.filter = 'saturate(1)';
+    }
+
+    bar.addEventListener('click', ()=>showDetail(i, t));
+    col.appendChild(bar);
+
+    const label = document.createElement('div');
+    label.className = 'turn-label';
+    label.textContent = 'turn ' + (i+1);
+    col.appendChild(label);
+
+    const tot = document.createElement('div');
+    tot.className = 'turn-total mono';
+    tot.textContent = t.total.toLocaleString();
+    col.appendChild(tot);
+
+    barsEl.appendChild(col);
+  });
+}
+
+function showDetail(i, t){
+  const rows = [
+    ['O','Overhead', t.O],
+    ['S','Tool schemas', t.S],
+    ['H','History (carried over)', t.H],
+    ['R','Reasoning (new this turn)', t.R],
+    ['OUT','Output (this turn)', t.Out],
+  ];
+  detailEl.innerHTML = `<div class="detail-title">Turn ${i+1} — ${t.total.toLocaleString()} tokens total${t.total>BUDGET ? ' <span style="color:var(--danger)">· over budget</span>':''}</div>` +
+    rows.map(r=>`<div class="detail-row"><div class="k"><div class="swatch" style="background:var(--${r[0]})"></div>${r[1]}</div><div class="v">${r[2].toLocaleString()}</div></div>`).join('');
+}
+
+toggle.addEventListener('click', ()=>{
+  compress = !compress;
+  toggle.classList.toggle('on', compress);
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

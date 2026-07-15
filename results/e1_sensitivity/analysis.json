@@ -1,5 +1,5 @@
 {
-  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1_sensitivity",
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/runs/e1_sensitivity",
   "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
   "experiment": "e1_rtk_compaction",
   "factor_b": "compaction",

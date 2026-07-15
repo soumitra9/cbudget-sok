@@ -8,3 +8,6 @@ external/rtk/
 results/runpod_pod_id.txt
 results/runpod_pod_ip.txt
 .DS_Store
+
+# Paper draft (keep local only)
+paper/

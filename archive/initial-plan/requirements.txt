@@ -1,0 +1,6 @@
+pytest>=7.4
+# Add once wired to a real inference backend:
+# transformers>=4.40
+# torch>=2.2
+# tiktoken>=0.6          # for real token counting in cost_model.py
+# anthropic / openai     # if evaluating against API models rather than local HF

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PLAN_ROOT = PROJECT_ROOT.parent / "0.3 Plan"
+PLAN_ROOT = PROJECT_ROOT / "Plan"
 DEFAULT_EXTRACTION_SHEET = PROJECT_ROOT / "docs" / "method_extraction_sheet_v1.md"
 RESULTS = PROJECT_ROOT / "results"
 

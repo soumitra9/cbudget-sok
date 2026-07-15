@@ -1,0 +1,53 @@
+---
+description: How to compile the SoK paper LaTeX draft (BibTeX, figures, working directory)
+globs: paper/**/*
+alwaysApply: false
+---
+
+# SoK Paper LaTeX Compile Guide
+
+All compile commands run from **`paper/draft/`**. Do not compile from the repo root.
+
+## Standard build (four passes)
+
+```bash
+cd paper/draft
+
+pdflatex -interaction=nonstopmode main.tex   # pass 1 — [?] citations are normal
+bibtex main                                   # references.bib → main.bbl
+pdflatex -interaction=nonstopmode main.tex   # pass 2 — insert bibliography
+pdflatex -interaction=nonstopmode main.tex   # pass 3 — fix cross-refs
+```
+
+Shortcut: `make paper` (same four steps).
+
+## Layout (do not duplicate)
+
+| Path | Role |
+|------|------|
+| `draft/main.tex` | Single source document |
+| `draft/references.bib` | BibTeX database (working copy) |
+| `draft/IEEEtran.cls`, `draft/IEEEtran.bst` | IEEE template + BibTeX style |
+| `draft/figures/fig*.pdf` | Generated figure PDFs |
+| `draft/figures/scripts/` | Matplotlib scripts (`generate_all.sh`) |
+| `bibliography/references.bib` | Canonical bib (sync into draft when edited) |
+
+- Figures use `\graphicspath{{figures/}}` and `\includegraphics[width=\columnwidth]{...}` (or `\textwidth` in `figure*`).
+- Bibliography uses `\bibliographystyle{IEEEtran}` and `\bibliography{references}` — not a manual `\begin{thebibliography}` block.
+- Never edit `main.bbl` by hand; change `references.bib` and re-run the four-pass sequence.
+
+## Before compiling
+
+1. **Figures changed or missing?** `make figures` (runs `figures/scripts/generate_all.sh`).
+2. **Edited canonical bib?** `make sync-bib` copies `../bibliography/references.bib` into draft.
+3. **New `\cite{key}` in body?** Add the entry to `bibliography/references.bib`, sync, then compile. Uncited bib entries are omitted from the PDF.
+
+## Optional cleanup
+
+`make clean` removes aux/log/bbl and figure PDFs only (keeps scripts and `.sty`).
+
+## Common failures
+
+- **Missing `.sty`**: `threeparttable.sty` is vendored in `draft/`.
+- **Missing fonts** (e.g. `pcrr7t`): use a full TeX Live / MacTeX install, not `texlive-basic` alone.
+- **Undefined citations after full build**: key missing from `references.bib` or not cited in `main.tex` body text.

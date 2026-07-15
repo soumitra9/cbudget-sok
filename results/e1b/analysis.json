@@ -1,5 +1,5 @@
 {
-  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1b_rtk_cod",
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/runs/e1b_rtk_cod",
   "hypothesis_file": "configs/hypotheses/e1b_frozen.yaml",
   "experiment": "e1b_rtk_cod",
   "factor_b": "reasoning",

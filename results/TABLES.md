@@ -6,7 +6,7 @@
 - model_coefficients.csv
 - run_summary.csv
 - analysis.json: {
-  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1_rtk_compaction",
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/runs/e1_rtk_compaction",
   "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
   "experiment": "e1_rtk_compaction",
   "factor_b": "compaction",
@@ -38,7 +38,7 @@
 - model_coefficients.csv
 - run_summary.csv
 - analysis.json: {
-  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1b_rtk_cod",
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/runs/e1b_rtk_cod",
   "hypothesis_file": "configs/hypotheses/e1b_frozen.yaml",
   "experiment": "e1b_rtk_cod",
   "factor_b": "reasoning",
@@ -69,7 +69,7 @@
 - model_coefficients.csv
 - run_summary.csv
 - analysis.json: {
-  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/0.4 Experiments/runs/e1_sensitivity",
+  "experiment_runs_dir": "/Users/mehrots/Documents/Projects/Project_ContexManagement/runs/e1_sensitivity",
   "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
   "experiment": "e1_rtk_compaction",
   "factor_b": "compaction",
