@@ -68,7 +68,14 @@ def bootstrap_block_statistic(
 
 def write_bootstrap_result(result: dict[str, Any], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    payload = dict(result)
+    if "ci_low" in payload and "ci_lower" not in payload:
+        payload["ci_lower"] = payload["ci_low"]
+    if "ci_high" in payload and "ci_upper" not in payload:
+        payload["ci_upper"] = payload["ci_high"]
+    if "ci_low" in payload and "ci_high" in payload and "ci_width" not in payload:
+        payload["ci_width"] = float(payload["ci_high"]) - float(payload["ci_low"])
+    output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 def main() -> None:

@@ -6,5 +6,8 @@
   "n_blocks": 12,
   "n_obs": 48,
   "estimand": "raw_interaction",
-  "pre_registered": true
+  "pre_registered": true,
+  "ci_lower": -46983.85416666667,
+  "ci_upper": 50140.531249999985,
+  "ci_width": 97124.38541666666
 }

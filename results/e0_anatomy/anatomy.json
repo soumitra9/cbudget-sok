@@ -1,386 +1,194 @@
 [
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_001-seed17-rtk0-off-standard",
+    "mean_pt": 90849,
+    "mean_gt": 5246,
+    "peak_occupancy": 5871,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_001-seed17-rtk0-on-standard",
+    "mean_pt": 5863,
+    "mean_gt": 647,
+    "peak_occupancy": 1264,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_001-seed52-rtk0-off-standard",
+    "mean_pt": 199149,
+    "mean_gt": 11040,
+    "peak_occupancy": 13660,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_001-seed52-rtk0-on-standard",
+    "mean_pt": 79685,
+    "mean_gt": 8404,
+    "peak_occupancy": 4036,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_002-seed17-rtk0-off-standard",
+    "mean_pt": 2659,
+    "mean_gt": 463,
+    "peak_occupancy": 823,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_002-seed17-rtk0-on-standard",
+    "mean_pt": 74133,
+    "mean_gt": 7174,
+    "peak_occupancy": 4048,
+    "task_success": false
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed52-rtk0-off-standard",
+    "mean_pt": 79504,
+    "mean_gt": 1752,
+    "peak_occupancy": 5482,
+    "task_success": false
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_002-seed52-rtk0-on-standard",
+    "mean_pt": 73402,
+    "mean_gt": 8325,
+    "peak_occupancy": 4067,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_003-seed17-rtk0-off-standard",
+    "mean_pt": 12706,
+    "mean_gt": 871,
+    "peak_occupancy": 1919,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_001-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_003-seed17-rtk0-on-standard",
+    "mean_pt": 59079,
+    "mean_gt": 1585,
+    "peak_occupancy": 3768,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_003-seed52-rtk0-off-standard",
+    "mean_pt": 2339,
+    "mean_gt": 434,
+    "peak_occupancy": 718,
     "task_success": true
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_003-seed52-rtk0-on-standard",
+    "mean_pt": 1009,
+    "mean_gt": 301,
+    "peak_occupancy": 475,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_004-seed17-rtk0-off-standard",
+    "mean_pt": 68593,
+    "mean_gt": 1741,
+    "peak_occupancy": 4564,
     "task_success": true
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_004-seed17-rtk0-on-standard",
+    "mean_pt": 60073,
+    "mean_gt": 2976,
+    "peak_occupancy": 3623,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_004-seed52-rtk0-off-standard",
+    "mean_pt": 6087,
+    "mean_gt": 481,
+    "peak_occupancy": 1113,
     "task_success": true
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_004-seed52-rtk0-on-standard",
+    "mean_pt": 3937,
+    "mean_gt": 999,
+    "peak_occupancy": 1238,
+    "task_success": false
+  },
+  {
+    "cell": "baseline",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed17-rtk0-off-standard",
+    "mean_pt": 121714,
+    "mean_gt": 2549,
+    "peak_occupancy": 8134,
+    "task_success": false
+  },
+  {
+    "cell": "compaction_only",
+    "run_id": "e1_rtk_compaction-repo_task_005-seed17-rtk0-on-standard",
+    "mean_pt": 5880,
+    "mean_gt": 557,
+    "peak_occupancy": 1189,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_005-seed52-rtk0-off-standard",
+    "mean_pt": 6822,
+    "mean_gt": 705,
+    "peak_occupancy": 1327,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_002-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_005-seed52-rtk0-on-standard",
+    "mean_pt": 3749,
+    "mean_gt": 478,
+    "peak_occupancy": 900,
     "task_success": true
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_006-seed17-rtk0-off-standard",
+    "mean_pt": 134582,
+    "mean_gt": 2330,
+    "peak_occupancy": 9600,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_006-seed17-rtk0-on-standard",
+    "mean_pt": 63422,
+    "mean_gt": 3084,
+    "peak_occupancy": 3863,
+    "task_success": false
   },
   {
     "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
+    "run_id": "e1_rtk_compaction-repo_task_006-seed52-rtk0-off-standard",
+    "mean_pt": 11576,
+    "mean_gt": 664,
+    "peak_occupancy": 1875,
+    "task_success": false
   },
   {
     "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_003-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_004-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_005-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed07-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed07-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed13-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed13-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed42-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed42-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "baseline",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed99-rtk0-off-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
-    "task_success": true
-  },
-  {
-    "cell": "compaction_only",
-    "run_id": "e1_rtk_compaction-repo_task_006-seed99-rtk0-on-standard",
-    "mean_pt": 98,
-    "mean_gt": 11,
-    "peak_occupancy": 76,
+    "run_id": "e1_rtk_compaction-repo_task_006-seed52-rtk0-on-standard",
+    "mean_pt": 7019,
+    "mean_gt": 940,
+    "peak_occupancy": 1624,
     "task_success": true
   }
 ]

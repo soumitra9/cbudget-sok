@@ -1,6 +1,8 @@
 {
   "experiment_runs_dir": "runs/e1_rtk_compaction",
   "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
+  "experiment": "e1_rtk_compaction",
+  "factor_b": "compaction",
   "outcome_col": "pt",
   "pre_registered_model": "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed",
   "n_runs": 48,

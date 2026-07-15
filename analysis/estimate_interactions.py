@@ -22,7 +22,31 @@ def _factor_b_on(value: str, factor_key: str) -> int:
     return 0 if value in ("off", "standard", "", None) else 1
 
 
-def load_runs(runs_dir: Path) -> pd.DataFrame:
+EXPERIMENT_FACTOR_B: dict[str, str] = {
+    "e1_rtk_compaction": "compaction",
+    "e1b_rtk_cod": "reasoning",
+}
+
+
+def resolve_factor_b(hypothesis: dict[str, Any], treatment: dict[str, Any]) -> tuple[str, str]:
+    """Pick the experiment's second factorial factor for labeling and encoding."""
+    experiment = str(hypothesis.get("experiment", ""))
+    factor_key = EXPERIMENT_FACTOR_B.get(experiment)
+    if factor_key is None:
+        if treatment.get("compaction") not in (None, "off", "", "standard"):
+            factor_key = "compaction"
+        elif treatment.get("reasoning") not in (None, "standard", ""):
+            factor_key = "reasoning"
+        elif "reasoning" in treatment and treatment.get("compaction", "off") == "off":
+            factor_key = "reasoning"
+        else:
+            factor_key = "compaction"
+    default = "standard" if factor_key == "reasoning" else "off"
+    return factor_key, str(treatment.get(factor_key, default))
+
+
+def load_runs(runs_dir: Path, hypothesis: dict[str, Any] | None = None) -> pd.DataFrame:
+    hypothesis = hypothesis or {}
     rows = []
     for run_dir in sorted(runs_dir.iterdir()):
         if not run_dir.is_dir() or ".attempt" in run_dir.name:
@@ -34,12 +58,7 @@ def load_runs(runs_dir: Path) -> pd.DataFrame:
         status = json.loads(status_path.read_text(encoding="utf-8"))
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         treatment = manifest.get("treatment", {})
-        if "compaction" in treatment:
-            factor_key = "compaction"
-            factor_b = treatment.get("compaction", "off")
-        else:
-            factor_key = "reasoning"
-            factor_b = treatment.get("reasoning", "standard")
+        factor_key, factor_b = resolve_factor_b(hypothesis, treatment)
         rows.append(
             {
                 "run_id": manifest.get("run_id", run_dir.name),
@@ -196,14 +215,16 @@ def main() -> None:
     out = Path(args.output)
     out.mkdir(parents=True, exist_ok=True)
 
-    df = load_runs(runs_dir)
+    hypothesis = load_hypothesis(Path(args.hypothesis))
+    df = load_runs(runs_dir, hypothesis)
     df.to_csv(out / "run_summary.csv", index=False)
 
-    hypothesis = load_hypothesis(Path(args.hypothesis))
     outcome_col = args.outcome or outcome_col_from_hypothesis(hypothesis)
     result: dict[str, Any] = {
         "experiment_runs_dir": str(runs_dir),
         "hypothesis_file": args.hypothesis,
+        "experiment": hypothesis.get("experiment"),
+        "factor_b": EXPERIMENT_FACTOR_B.get(str(hypothesis.get("experiment", "")), "factor_b"),
         "outcome_col": outcome_col,
         "pre_registered_model": hypothesis.get("statistical_model", {}).get(
             "default", "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed"
