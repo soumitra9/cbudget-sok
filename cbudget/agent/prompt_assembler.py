@@ -44,7 +44,16 @@ class PromptAssembler:
             if message.role == "assistant":
                 messages.append({"role": "assistant", "content": message.content})
             elif message.role == "tool":
-                messages.append({"role": "user", "content": f"[tool output]\n{message.content}"})
+                messages.append({
+                    "role": "user",
+                    "content": (
+                        f"[tool output]\n{message.content}\n\n"
+                        "Respond with shell{\"command\":\"...\"} to run another command, "
+                        "or #### <summary> when fully done.\n"
+                        "To edit a Python file: write the ENTIRE file using "
+                        "python3 -c \"open('path','w').write('...')\". Never use sed."
+                    ),
+                })
             else:
                 messages.append({"role": message.role, "content": message.content})
         return messages

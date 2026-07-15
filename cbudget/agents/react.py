@@ -30,6 +30,9 @@ When fully done, respond with:
 Shell rules:
 - Non-interactive only (no TTY). Use sed, heredocs, or python -c for edits.
 - One command per turn.
+- To edit a Python file: ALWAYS write the ENTIRE file using:
+  shell{"command":"python3 -c \\"open('src/file.py', 'w').write('''full content here''')\\""}
+  Never use sed on Python files.
 
 Always use one of those two formats. No plain prose.
 """.strip()
