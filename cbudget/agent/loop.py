@@ -224,6 +224,7 @@ class AgentLoop:
                     "turn": state.turn,
                     "generated_tokens": response.generated_tokens,
                     "finish_reason": response.finish_reason,
+                    "response_tail": response.text[-400:],
                 },
             )
 

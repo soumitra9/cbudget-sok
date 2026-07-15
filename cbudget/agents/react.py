@@ -13,6 +13,8 @@ QWEN_SHELL_RE = re.compile(
     r'\bshell\s*\{\s*(?:"command"|command)\s*:\s*"((?:\\.|[^"\\])*)"\s*\}?',
     re.DOTALL,
 )
+# Markdown code block: ```bash\nCMD\n``` or ```\nCMD\n```
+BASH_BLOCK_RE = re.compile(r"```(?:bash|sh|shell)?\n(.*?)```", re.DOTALL)
 FINAL_ANSWER_RE = re.compile(r"####\s*(.*)", re.DOTALL)
 COMMAND_RE = re.compile(r'"command"\s*:\s*"((?:\\.|[^"\\])*)"')
 
@@ -57,6 +59,12 @@ class ReactPolicy(AgentPolicy):
                     return {"action": "tool", "command": command, "raw": text}
             except (json.JSONDecodeError, ValueError):
                 pass
+
+        bash_match = BASH_BLOCK_RE.search(text)
+        if bash_match:
+            command = bash_match.group(1).strip()
+            if command:
+                return {"action": "tool", "command": command, "raw": text}
 
         final_match = FINAL_ANSWER_RE.search(text)
         if final_match:
