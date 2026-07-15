@@ -10,7 +10,7 @@ from cbudget.agents.base import AgentPolicy
 
 TOOL_CALL_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
 QWEN_SHELL_RE = re.compile(
-    r'\bshell\s*\{[^}]*"command"\s*:\s*"((?:\\.|[^"\\])*)"[^}]*\}',
+    r'\bshell\s*\{\s*(?:"command"|command)\s*:\s*"((?:\\.|[^"\\])*)"\s*\}?',
     re.DOTALL,
 )
 FINAL_ANSWER_RE = re.compile(r"####\s*(.*)", re.DOTALL)
