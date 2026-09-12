@@ -16,8 +16,8 @@
   },
   "headline_thesis_D_prime": {
     "claim": "Theory-first, and the model is FALSIFIED in an informative way. Eq.5 (full-retention: a tool-output reduction dO_k propagates to dPT = dO_k*(T-k)) predicts RTK's PT saving. Using ACTUAL per-turn tool-output positions, the weighted prediction is -15,251 PT, but the OBSERVED saving is -4,992: the model OVER-PREDICTS by 3.05x.",
-    "why_it_over_predicts": "Not caching/truncation: history retention is ~0.99 in the compaction-off arm. The gap is downstream BEHAVIOUR - the 'fixed downstream behaviour' assumption fails. The generation-replay term rises +10,403 (offsetting 68% of the mechanical tool saving): the agent generates more when tool output is compressed. The full recurrence ACCOUNTING is correct - tool-replay + generation-replay reconstruct observed dPT to 0.97x - it is the fixed-behaviour ASSUMPTION that breaks.",
-    "why_this_is_the_contribution": "'We derived a recurrence model, tested Eq.5 against measurement, and it over-predicts 3.05x because compression is 68% offset by increased generation' is a genuine, quantified, theory-first result. The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures splits post hoc; none derive an a priori prediction and test it. Evidence: reanalysis/calibration_eq5.json.",
+    "why_it_over_predicts": "The obvious MECHANICAL escapes are eliminated by the data: retention ~0.99 (no truncation/caching), turns flat 19.33->19.00 (no trajectory escape), and real per-turn positions used (no late-landing escape). So the over-prediction is a genuine failure of Eq.5's fixed-behaviour assumption, diagnosed by elimination. A candidate mechanism (agent generates more under compression) is directionally present but NOT statistically supported (see limitation).",
+    "why_this_is_the_contribution": "'We derived a recurrence model, tested Eq.5 against measurement with actual per-turn positions, and it over-predicts 3.05x with the standard mechanical explanations eliminated' is a genuine, falsifiable, theory-first result. The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures splits post hoc; none derive an a priori prediction and test it. Evidence: reanalysis/calibration_eq5.json.",
     "falsifiability_note": "Unlike the Eq.8 Oaxaca identity (which sums to dPT for ANY data), this test COULD have failed and did - that is what makes it a finding."
   },
   "calibration_eq5_test": {
@@ -26,11 +26,21 @@
     "eq5_weighted_tool_prediction": -15251,
     "eq5_over_observed": 3.05,
     "uniform_tool_prediction": -16591,
-    "generation_replay_change": 10403,
-    "generation_offset_pct": 68,
-    "tool_plus_generation_reconstruction": -4848,
-    "reconstruction_over_observed": 0.97,
-    "caveat": "n=12/cell; the generation-offset magnitude is imprecise, but the robust, assumption-free result is the 3.05x Eq.5 over-prediction under near-full retention. The compaction-ON arm (Y01->Y11) has retention ~0.83 (compaction truncates history mid-run) and is confounded; it needs the separate Eq-2/3 compaction test."
+    "status": "ROBUST, assumption-free headline. Turns flat and retention ~full, so the mechanical escapes are eliminated.",
+    "generation_offset_HYPOTHESIS": {
+      "delta_gt": 972.6,
+      "se": 1287.6,
+      "t": 0.76,
+      "ci95": [-1693, 3638],
+      "verdict": "NULL at n=12; report as a candidate mechanism, NOT a finding. Do not state '68% offset by generation' as a result.",
+      "replay_weighted_form": "+10,403 (same undetectable signal amplified by (T-i); equally noisy)."
+    },
+    "tool_plus_gen_reconstruction": {
+      "value": -4848,
+      "over_observed": 0.97,
+      "status": "ACCOUNTING COMPLETENESS CHECK, not validation. dPT = d(T*S) + sum dA_i(T-i) + sum dO_i(T-i) + sum dU_i(T-i) is exhaustive by construction; landing near observed only confirms dU and scaffolding terms are small (extractor completeness)."
+    },
+    "compaction_on_arm": "Y01->Y11 has retention ~0.83 (compaction truncates history mid-run); confounded, needs the separate Eq-2/3 compaction test."
   },
   "normalisation_units_not_precision": {
     "raw_pt_interaction": {"estimate": 2897.5, "ci_halfwidth": 48562.2, "ci_over_abs_estimate": 16.76},
@@ -57,6 +67,7 @@
     "degeneracy_diagnostic": "104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories); a reusable measurement artifact, framed as supporting (AI Agents That Matter 2407.01502 critiques eval design but does not provide this per-run determinism/duplication filter)."
   },
   "errata_and_corrections": {
+    "generation_offset_mechanism_DEMOTED": "The replacement claim ('Eq.5 over-predicts because compression is 68% offset by increased generation') was itself unsupported: Delta gt = +973, SE 1288, t 0.76, 95% CI [-1693,+3638] - null at n=12. Demoted from finding to candidate HYPOTHESIS. The tool+gen reconstruction (0.97x) is an accounting identity (exhaustive by construction), relabelled as a completeness check, not validation. Fourth unsupported/circular claim caught pre-submission; the surviving headline is the assumption-free 3.05x Eq.5 over-prediction alone. Gate reaffirmed: apply the falsifiability test to each REPLACEMENT claim, not only the retracted one.",
     "oaxaca_confirms_model_claim_RETRACTED": "A prior version said the a priori replay model is confirmed because the Oaxaca split attributes 98.3% to replay. RETRACTED as circular: Eq.8 is an identity (sums to dPT for any data), so 98.3% tests arithmetic against itself, and the paper itself calls Eq.8 'decomposed conceptually' (a definition, not a prediction). The falsifiable content is in Eqs 4-7; the honest test (calibration_eq5) shows Eq.5 OVER-predicts 3.05x. Third circular claim caught pre-submission (after the 32x and this); standing rule now: for every claim, ask what result would have falsified it - if nothing would, it is not a finding.",
     "estimator_efficiency_claim_RETRACTED": "A prior version claimed per-turn normalisation gives ~32x precision / variance ~1000x, converting an uninformative interval into a precise null. RETRACTED: the 32x is mean turns (a units rescale); relative precision CI/|estimate| is unchanged (16.76 raw vs 16.95 per-turn, ratio 1.01x). The variance_gain 1014 was just 31.86^2. The claim contradicted our own null turns interaction (dividing by a near-constant cannot remove variance). D-prime rests on the calibration result alone.",
     "oaxaca_label_swap_fixed": "An earlier run reported '98% per-turn / 3% replay', naming the per-turn component twice, and had the JSON keys backwards (replay_term_dturns_x_occ / per_turn_term_turns_x_docc). Corrected per Eq.8: REPLAY = turns*dOcc (98.3%), TRAJECTORY = dturns*Occ (2.9%), remainder -1.3%, sum 100%. Keys are now replay_term_turns_x_docc / trajectory_term_dturns_x_occ. The math was always right; only the names were wrong.",
@@ -75,6 +86,7 @@
   "option_B_feasibility": {
     "B_and_D_prime_not_mutually_exclusive": true,
     "line": "D-prime ships now on existing data. Option B (breadth across task families / method pairs) is the funded follow-up. More SEEDS will NOT buy power at temperature 0.2 (E2 seeds collapse to ~2-3 distinct trajectories per cell); B must add TASKS and task FAMILIES (only code-repair fixtures exist now) and/or raise temperature.",
+    "precise_power_target": "To resolve the generation-offset hypothesis (detect ~973 GT at observed SD ~3150, 80% power) needs ~165 runs/cell. NOTE: a paired within-(task,seed) design does NOT reduce variance for this contrast (paired SD 4749 > pooled 3154; t=0.71), so pairing is not the lever here - raw replication is. This is Option B's concrete, quantified target, not a vague 'more pairs'.",
     "cost_note": "Compute is the binding constraint (A40 + vLLM, self-hosted). Breadth is resourcing, not a design flaw; D-prime does not depend on it."
   },
   "editor_criticism_response_map": {

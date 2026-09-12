@@ -54,10 +54,10 @@
       "weighted_pred_dPT": -15251.249999999998,
       "uniform_over_observed": 3.3231651337862442,
       "weighted_over_observed": 3.0548832395800307,
-      "d_gen_amplified": 10402.916666666668,
-      "gen_offset_of_tool_saving": 0.682102559899462,
-      "toolplusgen_pred_dPT": -4848.33333333333,
+      "d_gen_amplified_HYPOTHESIS": 10402.916666666668,
+      "toolplusgen_reconstruction_dPT": -4848.33333333333,
       "toolplusgen_over_observed": 0.9711395616685304,
+      "reconstruction_note": "This is an ACCOUNTING COMPLETENESS CHECK, not validation. From PT=T*S+sum_i(A_i+O_i+U_i)(T-i), decomposing dPT into tool-replay + gen-replay + remainder is exhaustive by construction; landing near observed only confirms dU and scaffolding are small (extractor completeness).",
       "mean_retention_ref": 0.993666827343528,
       "mean_retention_treat": 0.9933017232115854
     },
@@ -68,12 +68,25 @@
       "weighted_pred_dPT": -3249.833333333334,
       "uniform_over_observed": 2.167627988384577,
       "weighted_over_observed": 1.551294800906954,
-      "d_gen_amplified": -13648.499999999996,
-      "gen_offset_of_tool_saving": -4.199753833529923,
-      "toolplusgen_pred_dPT": -16898.33333333333,
+      "d_gen_amplified_HYPOTHESIS": -13648.499999999996,
+      "toolplusgen_reconstruction_dPT": -16898.33333333333,
       "toolplusgen_over_observed": 8.066351087950972,
+      "reconstruction_note": "This is an ACCOUNTING COMPLETENESS CHECK, not validation. From PT=T*S+sum_i(A_i+O_i+U_i)(T-i), decomposing dPT into tool-replay + gen-replay + remainder is exhaustive by construction; landing near observed only confirms dU and scaffolding are small (extractor completeness).",
       "mean_retention_ref": 0.8301435091219846,
       "mean_retention_treat": 0.9366520009806855
     }
-  ]
+  ],
+  "generation_offset_significance": {
+    "contrast": "Y00->Y10 raw GT",
+    "delta_gt": 972.583333333333,
+    "se": 1287.6433005963675,
+    "t": 0.755320462493677,
+    "ci95_approx": [
+      -1692.8382989011475,
+      3638.0049655678135
+    ],
+    "verdict": "NULL: not distinguishable from zero; generation-offset is a HYPOTHESIS, not a finding",
+    "n_per_cell_for_80pct_power": 164.90537366619316
+  },
+  "headline": "ROBUST result: Eq.5 over-predicts RTK's PT saving 3.05x with actual per-turn positions, under ~0.99 retention and flat turns - mechanical escapes (late-landing, truncation, trajectory) eliminated. The generation-offset explanation is a candidate only (Delta gt t~0.76, null at n=12)."
 }

@@ -82,6 +82,7 @@ def parse_run(run_dir: Path) -> dict | None:
         "factor_b_on": _comp_on(treat.get("compaction", "off")),
         "T": T,
         "pt": float(status.get("total_serialized_pt", 0)),
+        "gt": float(status.get("total_gt", 0)),
         "O_total": O_total,
         "W_tool_weighted": W_tool,
         "W_gen_weighted": W_gen,
@@ -107,12 +108,37 @@ def contrast(cells: pd.DataFrame, ref, treat, label):
         "weighted_pred_dPT": weighted,
         "uniform_over_observed": uniform / obs if obs else float("nan"),
         "weighted_over_observed": weighted / obs if obs else float("nan"),
-        "d_gen_amplified": d_gen,   # change in generation-replay term (downstream behaviour)
-        "gen_offset_of_tool_saving": d_gen / -weighted if weighted else float("nan"),
-        "toolplusgen_pred_dPT": weighted + d_gen,   # if downstream behaviour is the only other channel
+        "d_gen_amplified_HYPOTHESIS": d_gen,   # replay-weighted gen change; see gt_offset_test for significance
+        "toolplusgen_reconstruction_dPT": weighted + d_gen,
         "toolplusgen_over_observed": (weighted + d_gen) / obs if obs else float("nan"),
+        "reconstruction_note": (
+            "This is an ACCOUNTING COMPLETENESS CHECK, not validation. From PT=T*S+sum_i(A_i+O_i+U_i)(T-i), "
+            "decomposing dPT into tool-replay + gen-replay + remainder is exhaustive by construction; "
+            "landing near observed only confirms dU and scaffolding are small (extractor completeness)."
+        ),
         "mean_retention_ref": m(ref, "retention_ratio"),
         "mean_retention_treat": m(treat, "retention_ratio"),
+    }
+
+
+def gt_offset_test(df: pd.DataFrame, ref=(0, 0), treat=(1, 0)) -> dict:
+    """Is the generation increase (candidate offset mechanism) distinguishable from zero?"""
+    import numpy as np
+
+    a = df[(df.rtk_on == ref[0]) & (df.factor_b_on == ref[1])]["gt"].to_numpy()
+    b = df[(df.rtk_on == treat[0]) & (df.factor_b_on == treat[1])]["gt"].to_numpy()
+    d = float(b.mean() - a.mean())
+    se = float(np.sqrt(a.var(ddof=1) / len(a) + b.var(ddof=1) / len(b)))
+    sd_pool = float(np.sqrt((a.var(ddof=1) + b.var(ddof=1)) / 2))
+    n_req = float(2 * (1.96 + 0.84) ** 2 * (sd_pool / d) ** 2) if d else float("nan")
+    return {
+        "contrast": f"Y{ref[0]}{ref[1]}->Y{treat[0]}{treat[1]} raw GT",
+        "delta_gt": d,
+        "se": se,
+        "t": d / se if se else float("nan"),
+        "ci95_approx": [d - 2.07 * se, d + 2.07 * se],
+        "verdict": "NULL: not distinguishable from zero; generation-offset is a HYPOTHESIS, not a finding",
+        "n_per_cell_for_80pct_power": n_req,
     }
 
 
@@ -139,6 +165,13 @@ def main() -> None:
             contrast(cells, (0, 0), (1, 0), "RTK at compaction_off (Y00->Y10)"),
             contrast(cells, (0, 1), (1, 1), "RTK at compaction_on (Y01->Y11)"),
         ],
+        "generation_offset_significance": gt_offset_test(df, (0, 0), (1, 0)),
+        "headline": (
+            "ROBUST result: Eq.5 over-predicts RTK's PT saving 3.05x with actual per-turn positions, "
+            "under ~0.99 retention and flat turns - mechanical escapes (late-landing, truncation, "
+            "trajectory) eliminated. The generation-offset explanation is a candidate only (Delta gt "
+            "t~0.76, null at n=12)."
+        ),
     }
     OUT.write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))
