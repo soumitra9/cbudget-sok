@@ -105,6 +105,9 @@ def main() -> None:
     primary = block_ci(e1, "pt_per_turn")
     primary["excludes_zero"] = bool(primary["ci_low"] > 0 or primary["ci_high"] < 0)
 
+    # raw cumulative-PT interaction (same estimator, un-normalised) for the units check
+    raw_pt = block_ci(e1, "pt")
+
     # ---- pre-specified post-hoc ----
     turns_int = block_ci(e1, "turns")
     turns_int["excludes_zero"] = bool(turns_int["ci_low"] > 0 or turns_int["ci_high"] < 0)
@@ -164,23 +167,37 @@ def main() -> None:
             "compaction_effect_at_rtk_off_Y00_to_Y01": oaxaca(tab_e1, (0, 0), (0, 1)),
             "compaction_effect_at_rtk_on_Y10_to_Y11": oaxaca(tab_e1, (1, 0), (1, 1)),
         },
-        "estimator_efficiency": {
-            "raw_pt_interaction_ci_width": 50140.531249999985 - (-46983.85416666667),
-            "per_turn_pt_interaction_ci_width": primary["ci_high"] - primary["ci_low"],
-            "precision_gain_x": (50140.531249999985 - (-46983.85416666667))
+        "normalisation_units_not_precision": {
+            "raw_pt_interaction": {
+                "estimate": raw_pt["point_estimate"],
+                "ci95": [raw_pt["ci_low"], raw_pt["ci_high"]],
+                "ci_halfwidth": (raw_pt["ci_high"] - raw_pt["ci_low"]) / 2,
+                "ci_over_abs_estimate": ((raw_pt["ci_high"] - raw_pt["ci_low"]) / 2)
+                / abs(raw_pt["point_estimate"]),
+            },
+            "per_turn_pt_interaction": {
+                "estimate": primary["point_estimate"],
+                "ci95": [primary["ci_low"], primary["ci_high"]],
+                "ci_halfwidth": (primary["ci_high"] - primary["ci_low"]) / 2,
+                "ci_over_abs_estimate": ((primary["ci_high"] - primary["ci_low"]) / 2)
+                / abs(primary["point_estimate"]),
+            },
+            "point_scaled_x": raw_pt["point_estimate"] / primary["point_estimate"],
+            "ci_width_scaled_x": (raw_pt["ci_high"] - raw_pt["ci_low"])
             / (primary["ci_high"] - primary["ci_low"]),
-            "variance_gain_approx_x": (
-                (50140.531249999985 - (-46983.85416666667)) / (primary["ci_high"] - primary["ci_low"])
-            )
-            ** 2,
+            "relative_precision_change_x": (
+                (((primary["ci_high"] - primary["ci_low"]) / 2) / abs(primary["point_estimate"]))
+                / (((raw_pt["ci_high"] - raw_pt["ci_low"]) / 2) / abs(raw_pt["point_estimate"]))
+            ),
             "interpretation": (
-                "Normalising the cumulative-PT factorial interaction by turns shrinks the 95% CI "
-                "width ~32x (variance ~1000x), converting an uninformative interval into a precise "
-                "null. Since trajectory (turns) contributes only ~3% of the MEAN effect (Oaxaca) but "
-                "removing turn-count heterogeneity drives the ~32x SD reduction, trajectory "
-                "heterogeneity accounts for the overwhelming majority of the raw estimand's VARIANCE "
-                "while barely moving its mean. This is an estimator-efficiency result, not a "
-                "decomposition-of-the-mean result."
+                "Dividing the outcome by turns (mean turns ~32) rescales BOTH the point estimate and "
+                "the CI by ~32, so relative precision CI/|estimate| is unchanged (raw ~16.8 vs "
+                "per-turn ~17.0; relative_precision_change_x ~1.0). This is a change of units, NOT a "
+                "precision gain. The editor's specific suggestion (normalise by turns) does not "
+                "tighten inference for this dataset because turn counts barely vary across cells "
+                "(turns interaction +1.33, CI [-8.3,+12.2], null); the wide interval reflects genuine "
+                "between-task/between-run dispersion in per-turn occupancy, which normalisation does "
+                "not remove."
             ),
         },
     }

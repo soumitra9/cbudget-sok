@@ -117,11 +117,28 @@
       "components_sum_check": -22046.583333333332
     }
   },
-  "estimator_efficiency": {
-    "raw_pt_interaction_ci_width": 97124.38541666666,
-    "per_turn_pt_interaction_ci_width": 3048.7745277928093,
-    "precision_gain_x": 31.856860693132603,
-    "variance_gain_approx_x": 1014.8595732216571,
-    "interpretation": "Normalising the cumulative-PT factorial interaction by turns shrinks the 95% CI width ~32x (variance ~1000x), converting an uninformative interval into a precise null. Since trajectory (turns) contributes only ~3% of the MEAN effect (Oaxaca) but removing turn-count heterogeneity drives the ~32x SD reduction, trajectory heterogeneity accounts for the overwhelming majority of the raw estimand's VARIANCE while barely moving its mean. This is an estimator-efficiency result, not a decomposition-of-the-mean result."
+  "normalisation_units_not_precision": {
+    "raw_pt_interaction": {
+      "estimate": 2897.4999999999927,
+      "ci95": [
+        -46983.85416666667,
+        50140.531249999985
+      ],
+      "ci_halfwidth": 48562.19270833333,
+      "ci_over_abs_estimate": 16.76003199597358
+    },
+    "per_turn_pt_interaction": {
+      "estimate": 89.94329004328984,
+      "ci95": [
+        -1467.0606322901638,
+        1581.7138955026455
+      ],
+      "ci_halfwidth": 1524.3872638964046,
+      "ci_over_abs_estimate": 16.94831557932465
+    },
+    "point_scaled_x": 32.214743296641934,
+    "ci_width_scaled_x": 31.856860693132603,
+    "relative_precision_change_x": 1.0112340825719368,
+    "interpretation": "Dividing the outcome by turns (mean turns ~32) rescales BOTH the point estimate and the CI by ~32, so relative precision CI/|estimate| is unchanged (raw ~16.8 vs per-turn ~17.0; relative_precision_change_x ~1.0). This is a change of units, NOT a precision gain. The editor's specific suggestion (normalise by turns) does not tighten inference for this dataset because turn counts barely vary across cells (turns interaction +1.33, CI [-8.3,+12.2], null); the wide interval reflects genuine between-task/between-run dispersion in per-turn occupancy, which normalisation does not remove."
   }
 }

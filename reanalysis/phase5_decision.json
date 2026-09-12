@@ -11,19 +11,19 @@
     "estimand": "E1 rtk x compaction, per-turn PT interaction Y11-Y10-Y01+Y00",
     "point": 89.94,
     "ci95": [-1467.06, 1581.71],
-    "verdict": "includes zero -> precise null",
-    "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first)"
+    "verdict": "includes zero -> null; interval is WIDE relative to the estimate (CI/|estimate| ~17), not a precise null",
+    "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first calibration)"
   },
   "headline_thesis_D_prime": {
-    "claim": "Cumulative-token estimands in factorial agent evaluations are variance-inflated into uninformativeness by trajectory-length heterogeneity that barely moves the mean; normalising by turns recovers ~32x precision, converting an uninformative interval into a precise null.",
-    "why_this_is_the_better_paper": "It is an estimator-efficiency claim (demonstrated, not asserted), a direct answer to editor point 3, and NOT pre-empted by arXiv:2607.12161 (which makes a decomposition-of-the-mean claim). The analytic replay model (Eqs 4-7) additionally accounts for ~98% of the observed mean PT saving, so the reanalysis is a calibration success for the model, not a non-result.",
-    "supersedes_prior_framing": "The earlier 'cumulative metrics mostly measure completion/trajectory' framing is contradicted by our own decomposition at the level of the MEAN (trajectory = 3%). The correct split is mean vs variance: 3% of the mean, ~99.9% of the variance."
+    "claim": "Theory-first calibration: the a priori replay model (Eqs 4-8) predicts the replay component of the token saving, and the measured Oaxaca decomposition confirms it - replay accounts for 98.3% of the full-contrast PT saving, remainder 1.3%. A model predicting a quantity and the measurement agreeing.",
+    "why_this_is_the_contribution": "The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures the split POST HOC; none derive its magnitude from a recurrence model a priori. That is the differentiator, and it needs no efficiency claim to stand.",
+    "attribution": "Compaction drives the saving (delta_pt -22k to -25k, ~90-100% via the replay channel); RTK small (-2k to -5k); interaction null."
   },
-  "estimator_efficiency": {
-    "raw_pt_interaction_ci_width": 97124.4,
-    "per_turn_pt_interaction_ci_width": 3048.8,
-    "precision_gain_x": 31.9,
-    "variance_gain_approx_x": 1015
+  "normalisation_units_not_precision": {
+    "raw_pt_interaction": {"estimate": 2897.5, "ci_halfwidth": 48562.2, "ci_over_abs_estimate": 16.76},
+    "per_turn_pt_interaction": {"estimate": 89.94, "ci_halfwidth": 1524.4, "ci_over_abs_estimate": 16.95},
+    "relative_precision_change_x": 1.01,
+    "finding": "Dividing PT by turns (mean turns ~32) rescales BOTH the estimate and the CI by ~32, so relative precision CI/|estimate| is UNCHANGED (16.8 vs 17.0). An earlier version of this memo claimed '~32x precision / uninformative -> precise null'; that was WRONG - a units change, not a precision gain (variance_gain 1014 = 31.86^2, the squared units factor). The editor's specific remedy (normalise by turns) does NOT tighten inference for this dataset because turn counts barely vary across cells (turns interaction +1.33, CI [-8.3,+12.2], null); the imprecision is genuine between-task/between-run per-turn-occupancy dispersion, which normalisation cannot remove. The revision should say this plainly, using the decomposition as support."
   },
   "oaxaca_eq8_e1": {
     "labels": "replay = per-turn (turns*dOcc); trajectory = turns-count (dTurns*Occ)",
@@ -34,7 +34,7 @@
       "rtk_at_compaction_off_Y00_to_Y10": {"delta_pt": -4992, "replay_pct": 80.2, "trajectory_pct": 21.2, "remainder_pct": -1.4},
       "rtk_at_compaction_on_Y01_to_Y11": {"delta_pt": -2095, "replay_pct": 185.9, "trajectory_pct": -96.2, "remainder_pct": 10.3, "caveat": "small denominator (-2095 PT) makes percentages unstable"}
     },
-    "interpretation": "The PT saving is driven by COMPACTION (delta_pt -22k to -25k), ~90-100% through the replay (per-turn) channel. RTK's own effect is small (-2k to -5k). The interaction (does RTK modify compaction's effect) is the precise null above."
+    "interpretation": "The PT saving is driven by COMPACTION (delta_pt -22k to -25k), ~90-100% through the replay (per-turn) channel. RTK's own effect is small (-2k to -5k). The interaction (does RTK modify compaction's effect) is the null above."
   },
   "supporting_results": {
     "turns_interaction_e1": {"point": 1.33, "ci95": [-8.34, 12.17], "verdict": "null; trajectory length ~18-19 turns in every cell (why the trajectory term is small)"},
@@ -43,6 +43,7 @@
     "degeneracy_diagnostic": "104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories); a reusable measurement artifact, framed as supporting (AI Agents That Matter 2407.01502 critiques eval design but does not provide this per-run determinism/duplication filter)."
   },
   "errata_and_corrections": {
+    "estimator_efficiency_claim_RETRACTED": "A prior version claimed per-turn normalisation gives ~32x precision / variance ~1000x, converting an uninformative interval into a precise null. RETRACTED: the 32x is mean turns (a units rescale); relative precision CI/|estimate| is unchanged (16.76 raw vs 16.95 per-turn, ratio 1.01x). The variance_gain 1014 was just 31.86^2. The claim contradicted our own null turns interaction (dividing by a near-constant cannot remove variance). D-prime rests on the calibration result alone.",
     "oaxaca_label_swap_fixed": "An earlier run reported '98% per-turn / 3% replay', naming the per-turn component twice, and had the JSON keys backwards (replay_term_dturns_x_occ / per_turn_term_turns_x_docc). Corrected per Eq.8: REPLAY = turns*dOcc (98.3%), TRAJECTORY = dturns*Occ (2.9%), remainder -1.3%, sum 100%. Keys are now replay_term_turns_x_docc / trajectory_term_dturns_x_occ. The math was always right; only the names were wrong.",
     "e2_collider_CONFIRMED": "Degeneracy by arm: Y00 24/36 (67%), Y10 24/36 (67%), Y01 28/36 (78%), Y11 28/36 (78%). Perfectly arm-consistent, 11 points higher in BOTH CoD cells, in exactly the direction Table 1 predicts for CoD's zero-shot-collapse failure mode. This is treatment-induced, not noise; filtering E2 to get the interaction is post-treatment conditioning on a collider. (An interim note comparing against the ~26/cell average mistakenly read this as balance; the correct comparison is the arm contrast, and the frozen YAML's collider basis stands.)",
     "e1_primacy_robust_grounds": "E1 is the primary on grounds that survive scrutiny: (a) zero process-degenerate runs, no filtering needed, (b) full 12 runs and six distinct tasks per cell, (c) PT is the exact outcome the editor objected to; and independently, E2's interaction requires collider-inducing filtering. E2 remains descriptive."
@@ -64,7 +65,7 @@
   "editor_criticism_response_map": {
     "1_exposition_spec_list": "Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
     "2_composition_more_extensive_across_task_types": "Acknowledged limitation (single code-repair family). D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
-    "3_statistical_relevance_success_split_or_normalise_by_turns": "DONE: per-turn normalisation is the primary and yields the 32x precision gain (uninformative interval -> precise null); success-stratified shown descriptively with the collider caveat; degeneracy diagnostic exposes effective-n.",
+    "3_statistical_relevance_success_split_or_normalise_by_turns": "Addressed honestly: per-turn normalisation (the editor's remedy) was implemented as the frozen primary, but it does NOT improve inference here - it rescales units by ~mean turns and leaves relative precision unchanged (CI/|est| 16.8 vs 17.0), because turn counts barely vary (turns interaction null). The genuine imprecision is between-task/between-run occupancy dispersion at n=12/cell. Success-stratified is shown descriptively with the collider caveat; the 72% degeneracy diagnostic exposes effective-n. We report that normalise-by-turns was not the effective remedy for this dataset and support it with the decomposition.",
     "4_conclusions_significance": "D-prime: validated predictive replay model (98% of mean) + the estimator-efficiency result + clean Eq.8 attribution + the 72% degeneracy finding constitute a measurement contribution, not a non-result."
   },
   "next_steps_needing_user_go_ahead": [
