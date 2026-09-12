@@ -12,35 +12,24 @@
     "point": 89.94,
     "ci95": [-1467.06, 1581.71],
     "verdict": "includes zero -> null; interval is WIDE relative to the estimate (CI/|estimate| ~17), not a precise null",
-    "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first calibration)"
+    "branch_taken": "primary_ci_includes_zero -> honest null; and per significance_audit_GOVERNING, ALL token-outcome contrasts are underpowered, so the paper becomes taxonomy + accounting framework + methodological pilot (see honest_paper_framing)"
   },
-  "headline_thesis_D_prime": {
-    "claim": "Theory-first, and the model is FALSIFIED in an informative way. Eq.5 (full-retention: a tool-output reduction dO_k propagates to dPT = dO_k*(T-k)) predicts RTK's PT saving. Using ACTUAL per-turn tool-output positions, the weighted prediction is -15,251 PT, but the OBSERVED saving is -4,992: the model OVER-PREDICTS by 3.05x.",
-    "why_it_over_predicts": "The obvious MECHANICAL escapes are eliminated by the data: retention ~0.99 (no truncation/caching), turns flat 19.33->19.00 (no trajectory escape), and real per-turn positions used (no late-landing escape). So the over-prediction is a genuine failure of Eq.5's fixed-behaviour assumption, diagnosed by elimination. A candidate mechanism (agent generates more under compression) is directionally present but NOT statistically supported (see limitation).",
-    "why_this_is_the_contribution": "'We derived a recurrence model, tested Eq.5 against measurement with actual per-turn positions, and it over-predicts 3.05x with the standard mechanical explanations eliminated' is a genuine, falsifiable, theory-first result. The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures splits post hoc; none derive an a priori prediction and test it. Evidence: reanalysis/calibration_eq5.json.",
-    "falsifiability_note": "Unlike the Eq.8 Oaxaca identity (which sums to dPT for ANY data), this test COULD have failed and did - that is what makes it a finding."
+  "calibration_eq5_3x_RETRACTED": {
+    "status": "RETRACTED (5th). The '3.05x over-prediction' was not established.",
+    "why": "The observed RTK effect on PT (compaction off) is -3,544 with a task-seed block-bootstrap 95% CI of [-28,419, +22,808] (t~-0.2): NOT distinguishable from zero. The Eq.5 prediction of -15,251 sits INSIDE that CI, so the data cannot distinguish 'model over-predicts 3.05x' from 'model is exactly right' from 'RTK does nothing'. A ratio of two point estimates was reported without propagating uncertainty. What would have falsified 'the model over-predicts'? The prediction landing inside the observed CI - which is what happened.",
+    "root_cause": "Same structural error as the prior four, new costume: a well-measured input (tool output -60%, retention 0.99, turns flat) used to make a precise prediction of an UNMEASURABLE target (cumulative PT, per-cell SD ~62,709 ~= mean ~58,885)."
   },
-  "calibration_eq5_test": {
-    "contrast": "RTK at compaction_off (Y00->Y10), retention ~0.99 (full)",
-    "observed_dPT": -4992,
-    "eq5_weighted_tool_prediction": -15251,
-    "eq5_over_observed": 3.05,
-    "uniform_tool_prediction": -16591,
-    "status": "ROBUST, assumption-free headline. Turns flat and retention ~full, so the mechanical escapes are eliminated.",
-    "generation_offset_HYPOTHESIS": {
-      "delta_gt": 972.6,
-      "se": 1287.6,
-      "t": 0.76,
-      "ci95": [-1693, 3638],
-      "verdict": "NULL at n=12; report as a candidate mechanism, NOT a finding. Do not state '68% offset by generation' as a result.",
-      "replay_weighted_form": "+10,403 (same undetectable signal amplified by (T-i); equally noisy)."
+  "significance_audit_GOVERNING": {
+    "source": "reanalysis/significance_audit.json (task-seed block bootstrap, all contrasts)",
+    "result": "3 of 36 contrasts are distinguishable from zero, and all three are DIRECT mechanical effects (near-tautological), not compositional or downstream:",
+    "distinguishable": {
+      "rtk_main::total_tool_output_tokens": {"point": -802.8, "ci95": [-1538.6, -144.5], "meaning": "RTK reduces tool output (its direct target)"},
+      "compaction_main::pt": {"point": -23495.3, "ci95": [-45964.4, -2602.9], "meaning": "compaction reduces cumulative PT (large, direct)"},
+      "compaction_main::pt_per_turn": {"point": -773.6, "ci95": [-1440.0, -162.7], "meaning": "same, per-turn"}
     },
-    "tool_plus_gen_reconstruction": {
-      "value": -4848,
-      "over_observed": 0.97,
-      "status": "ACCOUNTING COMPLETENESS CHECK, not validation. dPT = d(T*S) + sum dA_i(T-i) + sum dO_i(T-i) + sum dU_i(T-i) is exhaustive by construction; landing near observed only confirms dU and scaffolding terms are small (extractor completeness)."
-    },
-    "compaction_on_arm": "Y01->Y11 has retention ~0.83 (compaction truncates history mid-run); confounded, needs the separate Eq-2/3 compaction test."
+    "NOT_distinguishable": "RTK->PT (-3544, CI crosses 0), RTK->GT, compaction->GT, ALL interactions (pt/gt/per-turn/turns), turns, and everything in E2. The compositional/interaction question the paper actually asks is unanswerable at n=12.",
+    "honest_reading": "RTK measurably compresses its direct target (tool output) but this does NOT produce a detectable change in cumulative PT or GT - because cumulative-token variance swamps it. That IS the editor's variance point, demonstrated. No token-outcome headline (3.05x, generation offset, RTK main effect on PT) is supported at this sample size.",
+    "protocol_cost": "To detect the Eq.5-predicted RTK PT effect (~15k) at pooled SD ~62,709 needs ~265 runs/cell (80% power); the observed effect would need ~4,900/cell. Current n=12/cell. This required-sample-size number is itself a methodological deliverable."
   },
   "normalisation_units_not_precision": {
     "raw_pt_interaction": {"estimate": 2897.5, "ci_halfwidth": 48562.2, "ci_over_abs_estimate": 16.76},
@@ -67,9 +56,10 @@
     "degeneracy_diagnostic": "104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories); a reusable measurement artifact, framed as supporting (AI Agents That Matter 2407.01502 critiques eval design but does not provide this per-run determinism/duplication filter)."
   },
   "errata_and_corrections": {
-    "generation_offset_mechanism_DEMOTED": "The replacement claim ('Eq.5 over-predicts because compression is 68% offset by increased generation') was itself unsupported: Delta gt = +973, SE 1288, t 0.76, 95% CI [-1693,+3638] - null at n=12. Demoted from finding to candidate HYPOTHESIS. The tool+gen reconstruction (0.97x) is an accounting identity (exhaustive by construction), relabelled as a completeness check, not validation. Fourth unsupported/circular claim caught pre-submission; the surviving headline is the assumption-free 3.05x Eq.5 over-prediction alone. Gate reaffirmed: apply the falsifiability test to each REPLACEMENT claim, not only the retracted one.",
+    "generation_offset_mechanism_DEMOTED": "The replacement claim ('Eq.5 over-predicts because compression is 68% offset by increased generation') was itself unsupported: Delta gt = +973, SE 1288, t 0.76, 95% CI [-1693,+3638] - null at n=12. Demoted from finding to candidate HYPOTHESIS. The tool+gen reconstruction (0.97x) is an accounting identity (exhaustive by construction), relabelled as a completeness check, not validation. Fourth unsupported claim caught pre-submission. (The 3.05x Eq.5 over-prediction that this erratum once called the surviving headline was ITSELF retracted next - see calibration_3.05x_overprediction_RETRACTED.) Gate reaffirmed: apply the falsifiability test to each REPLACEMENT claim, not only the retracted one.",
     "oaxaca_confirms_model_claim_RETRACTED": "A prior version said the a priori replay model is confirmed because the Oaxaca split attributes 98.3% to replay. RETRACTED as circular: Eq.8 is an identity (sums to dPT for any data), so 98.3% tests arithmetic against itself, and the paper itself calls Eq.8 'decomposed conceptually' (a definition, not a prediction). The falsifiable content is in Eqs 4-7; the honest test (calibration_eq5) shows Eq.5 OVER-predicts 3.05x. Third circular claim caught pre-submission (after the 32x and this); standing rule now: for every claim, ask what result would have falsified it - if nothing would, it is not a finding.",
     "estimator_efficiency_claim_RETRACTED": "A prior version claimed per-turn normalisation gives ~32x precision / variance ~1000x, converting an uninformative interval into a precise null. RETRACTED: the 32x is mean turns (a units rescale); relative precision CI/|estimate| is unchanged (16.76 raw vs 16.95 per-turn, ratio 1.01x). The variance_gain 1014 was just 31.86^2. The claim contradicted our own null turns interaction (dividing by a near-constant cannot remove variance). D-prime rests on the calibration result alone.",
+    "calibration_3.05x_overprediction_RETRACTED": "The '3.05x over-prediction' headline (itself the replacement for the retracted 98.3% claim) was not established: the observed RTK PT effect is -3,544 with 95% CI [-28,419,+22,808] (null), and the Eq.5 prediction -15,251 sits inside that CI. Fifth retraction. Governing evidence: significance_audit (3/36 contrasts distinguishable, all direct-mechanical). Structural lesson now explicit: do not build any claim whose TARGET is cumulative PT/GT at n=12 - that target's SD ~= its mean. The paper's empirical headline must be dropped.",
     "oaxaca_label_swap_fixed": "An earlier run reported '98% per-turn / 3% replay', naming the per-turn component twice, and had the JSON keys backwards (replay_term_dturns_x_occ / per_turn_term_turns_x_docc). Corrected per Eq.8: REPLAY = turns*dOcc (98.3%), TRAJECTORY = dturns*Occ (2.9%), remainder -1.3%, sum 100%. Keys are now replay_term_turns_x_docc / trajectory_term_dturns_x_occ. The math was always right; only the names were wrong.",
     "e2_collider_CONFIRMED": "Degeneracy by arm: Y00 24/36 (67%), Y10 24/36 (67%), Y01 28/36 (78%), Y11 28/36 (78%). Perfectly arm-consistent, 11 points higher in BOTH CoD cells, in exactly the direction Table 1 predicts for CoD's zero-shot-collapse failure mode. This is treatment-induced, not noise; filtering E2 to get the interaction is post-treatment conditioning on a collider. (An interim note comparing against the ~26/cell average mistakenly read this as balance; the correct comparison is the arm contrast, and the frozen YAML's collider basis stands.)",
     "e1_primacy_robust_grounds": "E1 is the primary on grounds that survive scrutiny: (a) zero process-degenerate runs, no filtering needed, (b) full 12 runs and six distinct tasks per cell, (c) PT is the exact outcome the editor objected to; and independently, E2's interaction requires collider-inducing filtering. E2 remains descriptive."
@@ -85,18 +75,32 @@
   ],
   "option_B_feasibility": {
     "B_and_D_prime_not_mutually_exclusive": true,
-    "line": "D-prime ships now on existing data. Option B (breadth across task families / method pairs) is the funded follow-up. More SEEDS will NOT buy power at temperature 0.2 (E2 seeds collapse to ~2-3 distinct trajectories per cell); B must add TASKS and task FAMILIES (only code-repair fixtures exist now) and/or raise temperature.",
+    "line": "The taxonomy + methods paper ships now on existing data. Option B (an actual composition study) is the funded follow-up and needs ~265 runs/cell (not 12) across more task families; more SEEDS will NOT buy power at temperature 0.2 (E2 seeds collapse to ~2-3 distinct trajectories per cell).",
     "precise_power_target": "To resolve the generation-offset hypothesis (detect ~973 GT at observed SD ~3150, 80% power) needs ~165 runs/cell. NOTE: a paired within-(task,seed) design does NOT reduce variance for this contrast (paired SD 4749 > pooled 3154; t=0.71), so pairing is not the lever here - raw replication is. This is Option B's concrete, quantified target, not a vague 'more pairs'.",
     "cost_note": "Compute is the binding constraint (A40 + vLLM, self-hosted). Breadth is resourcing, not a design flaw; D-prime does not depend on it."
   },
+  "honest_paper_framing": {
+    "verdict": "After five retracted empirical headlines, the data do not support ANY token-outcome finding at n=12 beyond the two near-tautological direct effects. The honest paper is a taxonomy + accounting framework + methodological pilot - close to the original abstract, which was more accurate than anything that replaced it.",
+    "what_the_paper_claims_and_can_support": [
+      "Taxonomy of token-efficiency interventions by intervention point (Categories 1-5).",
+      "Budget-recurrence accounting framework (Eqs 4-8) as a conceptual tool (NOT validated as predictive at this n).",
+      "C2 commensurability argument (published evaluations are not directly comparable).",
+      "A pilot 2x2 protocol that DEMONSTRATES the evaluation method and reports what it costs to run properly: cumulative-token SD ~= mean, so ~265 runs/cell needed to detect even the model-predicted RTK effect; 72% of E2 runs process-degenerate (arm-loaded 78/67, collider); seeds buy ~1 extra trajectory not 4; the interaction is a null and is underpowered for ALL token outcomes, not just the interaction.",
+      "Two direct-mechanical effects that ARE detectable (reported as such, not as compositional findings): RTK reduces tool output (-803, CI [-1539,-145]); compaction reduces cumulative PT (-23,495, CI [-45,964,-2,603]).",
+      "E1 confirmatory result reproduces byte-exact from raw traces (reproducibility)."
+    ],
+    "what_the_paper_must_NOT_claim": "Any RTK effect on PT/GT; any interaction/composition effect; the 3.05x calibration; the generation-offset mechanism; a validated predictive model; a normalisation precision gain."
+  },
   "editor_criticism_response_map": {
-    "1_exposition_spec_list": "Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
-    "2_composition_more_extensive_across_task_types": "Acknowledged limitation (single code-repair family). D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
-    "3_statistical_relevance_success_split_or_normalise_by_turns": "Addressed honestly: per-turn normalisation (the editor's remedy) was implemented as the frozen primary, but it does NOT improve inference here - it rescales units by ~mean turns and leaves relative precision unchanged (CI/|est| 16.8 vs 17.0), because turn counts barely vary (turns interaction null). The genuine imprecision is between-task/between-run occupancy dispersion at n=12/cell. Success-stratified is shown descriptively with the collider caveat; the 72% degeneracy diagnostic exposes effective-n. We report that normalise-by-turns was not the effective remedy for this dataset and support it with the decomposition.",
-    "4_conclusions_significance": "D-prime: an a priori recurrence model TESTED against measurement and shown to over-predict RTK's saving 3.05x, with the standard mechanical explanations eliminated by the data (retention ~0.99, turns flat) + the clean Eq.8 descriptive attribution + the 72% degeneracy finding. A quantified, falsifiable model-vs-measurement result, not a non-result and not a circular confirmation. (The specific behavioural mechanism for the gap remains an underpowered hypothesis, stated as such.)"
+    "1_exposition_spec_list": "Phase 6 rewrite: replace the 6.3 setting-list with a what/why narrative anchored on the accounting framework and the protocol.",
+    "2_composition_more_extensive_across_task_types": "Conceded and reframed: at n=12 the composition question is unanswerable (all interactions null, wide CIs). The pilot's job is to demonstrate the protocol and quantify the sample size a real composition study needs (~265/cell), across more task families. This turns the weakness into the methodological contribution.",
+    "3_statistical_relevance_success_split_or_normalise_by_turns": "Addressed honestly and turned into a result: per-turn normalisation (the editor's remedy) does NOT help here (relative precision unchanged, CI/|est| 16.8 vs 17.0; turns ~constant). The real problem is cumulative-token dispersion (SD ~= mean); we quantify it and the required sample size. Success-stratification is a collider (descriptive only).",
+    "4_conclusions_significance": "Reframed from an empirical headline to a methodological one: the significance is the framework + the quantified cost of doing this evaluation correctly (variance, degeneracy, seed-futility, required n), plus an honest null on the composition question. TMLR judges whether claims are supported; this version's claims are."
   },
   "next_steps_needing_user_go_ahead": [
-    "Phase 6: create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen) and rewrite exposition + integrate the estimator-efficiency thesis and corpus fixes.",
-    "Phase 7: TMLR reformat, relabel SAC, deposit reanalysis/run_summary_enriched.csv to a data repository."
+    "DECISION for the user: accept the methods/protocol + taxonomy framing (recommended, the only version the data support), or pursue Option B (scale to ~265/cell across task families) before writing an empirical composition claim.",
+    "DO NOT run the compaction Eq-2/3 test: it has the same structure (precise prediction vs an unmeasurable cumulative-token target) and would produce a sixth retraction.",
+    "Phase 6 (on user go-ahead): create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen), rewrite as taxonomy + accounting framework + methodological pilot; integrate corpus fixes (SAC->cost-of-pass, ACON/AgentDiet/LightThinker++, cite 2607.12161 with date).",
+    "Phase 7: TMLR reformat; deposit reanalysis/run_summary_enriched.csv."
   ]
 }
