@@ -1,0 +1,54 @@
+{
+  "input_data_sha256": "b5190d6be4775160326e3fa234296a7883ee4182dad3ed8e82ed7b7808f1e99c",
+  "rule_sha256_file": "reanalysis/rule_frozen.sha256",
+  "primary": {
+    "experiment": "e1_rtk_compaction",
+    "outcome": "pt_per_turn",
+    "estimand": "interaction Y11-Y10-Y01+Y00",
+    "point_estimate": 89.94329004328984,
+    "ci95": [
+      -1467.0606322901638,
+      1581.7138955026455
+    ],
+    "n_blocks": 12,
+    "n_obs": 48,
+    "excludes_zero": false,
+    "branch": "primary_ci_includes_zero"
+  },
+  "secondary_prespecified_posthoc": {
+    "turns_interaction_e1": {
+      "point_estimate": 1.3333333333333321,
+      "ci95": [
+        -8.337499999999999,
+        12.166666666666666
+      ],
+      "excludes_zero": false
+    }
+  },
+  "descriptive": {
+    "e2_gt_per_turn_interaction_UNFILTERED": {
+      "point_estimate": 10.284682664023258,
+      "ci95": [
+        -0.5783811047137151,
+        22.662925482815936
+      ],
+      "caveat": "collider (degeneracy loads on CoD) + gt=11 collapse contamination; descriptive only"
+    },
+    "success_only_e1_pt_per_turn_interaction": {
+      "point_estimate": 132.7467211800547,
+      "n_success": 22,
+      "caveat": "success is post-treatment (collider); descriptive only, no inference"
+    }
+  },
+  "oaxaca_e1": {
+    "reference_cell": "Y00",
+    "treated_cell": "Y11",
+    "delta_pt": -27039.0,
+    "replay_term_dturns_x_occ": -793.7284482758621,
+    "per_turn_term_turns_x_docc": -26589.096069868996,
+    "remainder_dT_x_dO": 343.82451814485773,
+    "remainder_ratio": 0.012715874039160389,
+    "clean_separation": true,
+    "components_sum_check": -27039.0
+  }
+}

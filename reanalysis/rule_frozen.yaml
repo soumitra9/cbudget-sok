@@ -1,0 +1,123 @@
+# Frozen decision rule for the TMLR re-analysis.
+# This file is frozen BEFORE any per-turn interaction estimand is computed (Phase 4).
+# It fixes: (a) the ONE primary estimand, (b) how the primary experiment was selected
+# (on structural/process grounds, not on any outcome), (c) the branch the paper takes
+# under each primary outcome, (d) the Oaxaca decomposition reference cell and remainder
+# threshold. SHA-256 of this file is recorded in rule_frozen.sha256 after writing.
+
+meta:
+  frozen_date: "2026-09-11"
+  purpose: >
+    Neutralise multiple-comparisons and outcome-driven selection for the TMLR
+    re-analysis of the desk-rejected AI Review submission. Selection of the primary
+    experiment was made from structural run properties only (degeneracy, task
+    coverage, determinism) computed in reanalysis/phase2_gates.json; no per-turn
+    interaction value was known at freeze time.
+  input_data:
+    file: reanalysis/run_summary_enriched.csv
+    sha256: "b5190d6be4775160326e3fa234296a7883ee4182dad3ed8e82ed7b7808f1e99c"
+  upstream_confirmatory_reproduced: true   # Phase 0 gate: E1 +2897.5, E2 -5.06 byte-exact
+
+# ---------------------------------------------------------------------------
+# PRIMARY estimand (exactly one; everything else is pre-specified post-hoc)
+# ---------------------------------------------------------------------------
+primary:
+  experiment: e1_rtk_compaction         # rtk x compaction 2x2
+  outcome: pt_per_turn                   # per-run: total_serialized_pt / turns
+  estimand: interaction                 # Delta = Y11 - Y10 - Y01 + Y00 on cell means of pt_per_turn
+  cells:
+    Y00: {rtk_on: 0, factor_b_on: 0}
+    Y01: {rtk_on: 0, factor_b_on: 1}
+    Y10: {rtk_on: 1, factor_b_on: 0}
+    Y11: {rtk_on: 1, factor_b_on: 1}
+  runs_used: all_48                      # E1 has ZERO degeneracy -> no filtering, no post-treatment conditioning
+  inference:
+    method: task_seed_block_bootstrap
+    block_cols: [task_id, seed]
+    B: 1000
+    seed: 0
+    ci: percentile_95
+    reuse: analysis/bootstrap.py::bootstrap_block_statistic
+  selection_basis: >
+    E1 was chosen over E2 on process integrity, decided pre-outcome. E1 has zero
+    process-degenerate runs, requires no post-treatment filtering, and retains full
+    6-task coverage in all four cells. E2 degeneracy loads on the CoD arms (28 vs 24;
+    distinct non-degenerate tasks 6->5), so filtering E2 to obtain the interaction is
+    post-treatment conditioning on a collider. E2's larger raw effective-n (17-18/arm
+    vs E1's 12) is illusory because reaching it requires that collider-inducing filter.
+
+# ---------------------------------------------------------------------------
+# Branch map: what the paper becomes under each primary outcome.
+# Both are acceptable landing places; recorded so the asymmetry is visible.
+# ---------------------------------------------------------------------------
+branches:
+  primary_ci_excludes_zero:
+    label: composition_effect_supported
+    paper: >
+      Lead with the composition/interaction finding; the budget-recurrence model
+      (Eqs 4-8) explains the mechanism; Option B (scale to more task types / method
+      pairs) is the natural, funded-later follow-up. B and D-prime are not exclusive.
+  primary_ci_includes_zero:
+    label: honest_null_D_prime
+    paper: >
+      D-prime, theory-first: the analytic budget-recurrence model that PREDICTS the
+      replay/trajectory split a priori, CALIBRATED against measured runs. A null
+      interaction is itself a calibration datum, so the "insufficient significance"
+      objection does not attach. Concurrent work (arXiv:2607.12161 posted 2026-07-14,
+      one day before this freeze, on RTK specifically; arXiv:2608.16370, Aug 2026) is
+      cited as independent corroboration by a different (paired provider-billed) method.
+
+# ---------------------------------------------------------------------------
+# Pre-specified post-hoc / descriptive analyses (NOT the primary; never called
+# "preregistered"). Reported for completeness with stated caveats.
+# ---------------------------------------------------------------------------
+secondary_prespecified_posthoc:
+  - id: e2_perturn_gt_interaction
+    experiment: e1b_rtk_cod
+    outcome: gt_per_turn
+    estimand: interaction
+    status: descriptive_only
+    caveat: >
+      E2 degeneracy loads on the CoD arms (collider). Any degeneracy-filtered version is
+      post-treatment conditioning and reported descriptively only; the unfiltered version
+      is contaminated by the gt=11 zero-shot-collapse trajectories (temperature determinism).
+  - id: turns_interaction
+    experiment: e1_rtk_compaction
+    outcome: turns
+    estimand: interaction
+    status: prespecified_posthoc
+    note: does the intervention pair change trajectory length (the mechanism behind replay)?
+  - id: success_only_interaction
+    experiment: e1_rtk_compaction
+    outcome: pt_per_turn
+    subset: success==True
+    status: descriptive_only
+    caveat: >
+      Success is post-treatment (compaction can cause success); stratifying on it is a
+      collider. Reported descriptively to characterise the successful subpopulation, never
+      for inference (Amendment 2).
+
+# ---------------------------------------------------------------------------
+# Oaxaca-Blinder decomposition of Eq. 8 (Delta_PT = replay term + trajectory term + remainder)
+# Operationalised as: Delta_PT = (Delta turns)(mean occupancy) + (mean turns)(Delta occupancy) + remainder
+# ---------------------------------------------------------------------------
+oaxaca:
+  target: e1_rtk_compaction
+  identity: "Delta_PT ~= (Delta_turns * mean_occ) + (mean_turns * Delta_occ) + remainder"
+  reference_cell: Y00
+  reference_justification: >
+    Y00 is the untreated baseline arm (rtk off, compaction off): the factual pre-intervention
+    trajectory against which replay (turns) and per-turn (occupancy) contributions are
+    attributed. Using the baseline arm as reference makes the decomposition a
+    counterfactual of "adding" the interventions, matching the paper's Eq.8 direction.
+  remainder_threshold: 0.15
+  remainder_rule: >
+    If |remainder| / |Delta_PT| < 0.15 the additive replay/trajectory separation is
+    reported as clean. If it exceeds 0.15, the remainder (interaction of the two Deltas)
+    is reported explicitly and no clean-separation claim is made.
+
+multiple_comparisons:
+  policy: >
+    Exactly one primary estimand (primary.*) governs the headline claim and the branch
+    selection. All other quantities are pre-specified post-hoc or descriptive and are
+    never described as preregistered or confirmatory.

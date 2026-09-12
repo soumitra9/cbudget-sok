@@ -1,0 +1,112 @@
+{
+  "experiment_runs_dir": "runs/e1_rtk_compaction",
+  "hypothesis_file": "configs/hypotheses/e1_frozen.yaml",
+  "experiment": "e1_rtk_compaction",
+  "factor_b": "compaction",
+  "outcome_col": "pt",
+  "pre_registered_model": "PT_trajectory ~ rtk + compaction + rtk:compaction + task + seed",
+  "n_runs": 48,
+  "status": "ok",
+  "model_fit": {
+    "formula": "PT_trajectory ~ rtk + factor_b + rtk:factor_b + task + seed",
+    "outcome": "pt",
+    "n_obs": 48,
+    "n_params": 10,
+    "r_squared": 0.18503384738324313,
+    "coefficients": {
+      "const": {
+        "estimate": 85702.12500000009,
+        "std_error": 22733.06680082913
+      },
+      "rtk_on": {
+        "estimate": -4992.4166666665915,
+        "std_error": 20333.073081479073
+      },
+      "factor_b_on": {
+        "estimate": -24944.08333333342,
+        "std_error": 20333.07308147908
+      },
+      "interaction_on": {
+        "estimate": 2897.5000000000673,
+        "std_error": 28755.30771655102
+      },
+      "task_repo_task_002": {
+        "estimate": -1597.3750000000807,
+        "std_error": 24902.826976171862
+      },
+      "task_repo_task_003": {
+        "estimate": -32403.375000000033,
+        "std_error": 24902.826976171862
+      },
+      "task_repo_task_004": {
+        "estimate": -27661.00000000008,
+        "std_error": 24902.826976171862
+      },
+      "task_repo_task_005": {
+        "estimate": -49176.87500000005,
+        "std_error": 24902.826976171855
+      },
+      "task_repo_task_006": {
+        "estimate": -19519.375000000036,
+        "std_error": 24902.826976171862
+      },
+      "seed_52": {
+        "estimate": -5188.249999999993,
+        "std_error": 14377.653858275502
+      }
+    }
+  },
+  "estimands": {
+    "raw_interaction": {
+      "formula": "Y11 - Y10 - Y01 + Y00",
+      "cell_means": {
+        "Y00": 61381.666666666664,
+        "Y01": 36437.583333333336,
+        "Y10": 56389.25,
+        "Y11": 34342.666666666664
+      },
+      "value": 2897.4999999999927
+    },
+    "log_multiplicative_interaction": {
+      "formula": "log Y11 - log Y10 - log Y01 + log Y00",
+      "cell_means": {
+        "Y00": 61381.666666666664,
+        "Y01": 36437.583333333336,
+        "Y10": 56389.25,
+        "Y11": 34342.666666666664
+      },
+      "value": 0.025620420725207538
+    },
+    "success_adjusted_cost": {
+      "formula": "sum_i C_i / sum_i 1[success_i]",
+      "by_cell": {
+        "Y00": 245526.66666666666,
+        "Y01": 48583.444444444445,
+        "Y10": 169167.75,
+        "Y11": 68685.33333333333
+      },
+      "overall": 102846.09090909091,
+      "interaction_on_sac": 96460.80555555553
+    }
+  },
+  "raw_interaction_bootstrap": {
+    "point_estimate": 2897.4999999999927,
+    "ci_low": -46983.85416666667,
+    "ci_high": 50140.531249999985,
+    "n_bootstrap": 1000,
+    "n_blocks": 12,
+    "n_obs": 48,
+    "estimand": "raw_interaction",
+    "pre_registered": true
+  },
+  "confirmatory_interaction_coefficient": {
+    "estimate": 2897.5000000000673,
+    "std_error": 28755.30771655102
+  },
+  "hypothesis_direction": {
+    "interaction_direction": "negative_synergy_rtk_delays_compaction_trigger",
+    "interaction_sign": "negative_raw_interaction_on_pt_trajectory",
+    "rtk_main_effect": "reduces_tool_output_pt",
+    "compaction_main_effect": "reduces_history_pt_net_of_summarization_gt"
+  }
+}

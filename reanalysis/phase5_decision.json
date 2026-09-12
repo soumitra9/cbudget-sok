@@ -1,0 +1,49 @@
+{
+  "title": "Phase 5 decision memo (applies the frozen rule reanalysis/rule_frozen.yaml)",
+  "date": "2026-09-11",
+  "provenance": {
+    "phase0_gate": "PASS byte-exact (E1 +2897.5 / [-46984,+50141]; E2 -5.06 / [-407,+374])",
+    "rule_sha256_file": "reanalysis/rule_frozen.sha256",
+    "input_data_sha256": "b5190d6be4775160326e3fa234296a7883ee4182dad3ed8e82ed7b7808f1e99c"
+  },
+  "primary_outcome": {
+    "estimand": "E1 rtk x compaction, per-turn PT interaction Y11-Y10-Y01+Y00",
+    "point": 89.94,
+    "ci95": [-1467.06, 1581.71],
+    "verdict": "includes zero -> honest null",
+    "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first)"
+  },
+  "why_this_is_a_result_not_a_non_finding": [
+    "Editor point 3 (normalise by turns, not raw token sums) is implemented: per-turn normalisation tightened the CI from +/-48k (raw) to +/-1.5k, and the interaction is still null. The null is now precise, not an artifact of aggregation noise.",
+    "The Oaxaca decomposition of Eq.8 gives a clean, positive statement: the -27,039-token saving of the full intervention pair is 98% per-turn (occupancy) and ~3% replay (trajectory), remainder 1.3%. Savings are per-turn, not trajectory-driven, for this pair.",
+    "Determinism/degeneracy diagnostic: 104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories), so nominal replication is largely illusory. This is a reusable measurement artifact and explains why aggregate token sums were so noisy."
+  ],
+  "supporting_results": {
+    "turns_interaction_e1": {"point": 1.33, "ci95": [-8.34, 12.17], "verdict": "null; trajectory length ~18-19 turns in every cell"},
+    "e2_gt_per_turn_interaction_DESCRIPTIVE": {"point": 10.28, "ci95": [-0.58, 22.66], "caveat": "collider (degeneracy loads on CoD arms 28 vs 24) + gt=11 collapse; descriptive only"},
+    "success_only_e1_DESCRIPTIVE": {"point": 132.75, "n_success": 22, "caveat": "success is post-treatment (collider); no inference"}
+  },
+  "paper_under_this_branch_D_prime": {
+    "contribution": "Analytic budget-recurrence model (Eqs 4-8) that PREDICTS the replay/trajectory split a priori, CALIBRATED against measured runs. The observed 98%/3% per-turn/replay split for the compaction+rtk pair is the calibration datum.",
+    "positioning_vs_concurrent_work": "Cite arXiv:2607.12161 (posted 2026-07-14, one day before the 2026-07-15 freeze, on RTK specifically) and arXiv:2608.16370 (Aug 2026) as independent, concurrent corroboration reached by a different (paired provider-billed) method. They MEASURE the split; this work DERIVES its magnitude from a recurrence model. TMLR does not score novelty, so concurrency is neutral-to-positive.",
+    "must_fix_from_corpus_gate": [
+      "Relabel SAC as cost-of-pass v=C/R and cite arXiv:2504.13359 (+ Efficient Agents 2508.02694, AI Agents That Matter 2407.01502).",
+      "Add ACON (2510.00615), AgentDiet (2509.23586), LightThinker++ (2604.03679) to the taxonomy; re-scope C1 to an honest, narrow claim (no strict two-method cross-category composition with individual baselines found), not a headline gap."
+    ]
+  },
+  "option_B_feasibility": {
+    "B_and_D_prime_not_mutually_exclusive": true,
+    "line": "D-prime ships now on existing data. Option B (breadth across task types / method pairs) is the funded follow-up. Critically, more SEEDS will NOT buy power at temperature 0.2 (E2 shows seeds collapse to ~2-3 distinct trajectories per cell); B must add TASKS and task FAMILIES (only code-repair fixtures exist now) and/or raise temperature, not seeds. This is the concrete scaling requirement the editor's point 2 asks for.",
+    "cost_note": "Compute is the binding constraint (A40 + vLLM, self-hosted). Breadth is a resourcing question, not a design flaw; D-prime does not depend on it."
+  },
+  "editor_criticism_response_map": {
+    "1_exposition_spec_list": "Addressed in Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
+    "2_composition_more_extensive_across_task_types": "Acknowledged as a limitation (single code-repair family). Reframed: D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
+    "3_statistical_relevance_success_split_or_normalise_by_turns": "DONE: primary is per-turn (normalised by turns); success-stratified shown descriptively with the collider caveat; degeneracy diagnostic exposes effective-n.",
+    "4_conclusions_significance": "D-prime: a validated predictive recurrence model + precise per-turn null + clean Eq.8 decomposition + the 72% degeneracy finding constitute a measurement contribution, not a non-result."
+  },
+  "next_steps_needing_user_go_ahead": [
+    "Phase 6: create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen) and rewrite exposition + integrate D-prime and corpus fixes.",
+    "Phase 7: TMLR reformat, relabel SAC, deposit reanalysis/run_summary_enriched.csv to a data repository."
+  ]
+}

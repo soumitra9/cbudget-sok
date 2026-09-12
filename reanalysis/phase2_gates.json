@@ -1,0 +1,141 @@
+{
+  "source": "/Users/mehrots/Documents/Projects/Project_ContexManagement/reanalysis/run_summary_enriched.csv",
+  "determinism": {
+    "e1_rtk_compaction": {
+      "seeds": [
+        17,
+        52
+      ],
+      "n_seeds": 2,
+      "n_task_arm_cells": 24,
+      "cells_all_seeds_identical": 0,
+      "cells_fully_divergent": 24,
+      "mean_distinct_traj_per_cell": 2.0,
+      "nominal_n_per_arm": {
+        "Y00": 12,
+        "Y01": 12,
+        "Y10": 12,
+        "Y11": 12
+      },
+      "effective_n_per_arm": {
+        "Y00": 12,
+        "Y01": 12,
+        "Y10": 12,
+        "Y11": 12
+      },
+      "min_effective_n_per_arm": 12
+    },
+    "e1_sensitivity": {
+      "seeds": [
+        7,
+        13,
+        17,
+        42,
+        52,
+        99
+      ],
+      "n_seeds": 6,
+      "n_task_arm_cells": 12,
+      "cells_all_seeds_identical": 0,
+      "cells_fully_divergent": 0,
+      "mean_distinct_traj_per_cell": 3.0,
+      "nominal_n_per_arm": {
+        "Y01": 36,
+        "Y11": 36
+      },
+      "effective_n_per_arm": {
+        "Y01": 18,
+        "Y11": 18
+      },
+      "min_effective_n_per_arm": 18
+    },
+    "e1b_rtk_cod": {
+      "seeds": [
+        7,
+        13,
+        17,
+        42,
+        52,
+        99
+      ],
+      "n_seeds": 6,
+      "n_task_arm_cells": 24,
+      "cells_all_seeds_identical": 0,
+      "cells_fully_divergent": 0,
+      "mean_distinct_traj_per_cell": 2.917,
+      "nominal_n_per_arm": {
+        "Y00": 36,
+        "Y01": 36,
+        "Y10": 36,
+        "Y11": 36
+      },
+      "effective_n_per_arm": {
+        "Y00": 18,
+        "Y01": 17,
+        "Y10": 18,
+        "Y11": 17
+      },
+      "min_effective_n_per_arm": 17
+    }
+  },
+  "bug_vs_temperature": {
+    "verdict": "temperature_determinism",
+    "basis": "E1's two seeds diverge in every task-arm cell (cells_all_seeds_identical=0), so seeds are applied and functional; the E2/e1_sensitivity collapse is driven by temperature-0.2 near-greedy determinism on trivial fixtures, not a seeding bug.",
+    "repair_rerun_preauthorized": false
+  },
+  "e1_sensitivity_eligibility": {
+    "present": true,
+    "n_runs": 72,
+    "tasks": [
+      "repo_task_001",
+      "repo_task_002",
+      "repo_task_003",
+      "repo_task_004",
+      "repo_task_005",
+      "repo_task_006"
+    ],
+    "seeds": [
+      7,
+      13,
+      17,
+      42,
+      52,
+      99
+    ],
+    "arms_present_rtk_factorb": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "distinct_compaction_trigger_values": [
+      6144.0
+    ],
+    "n_distinct_trigger_values": 1,
+    "is_genuine_2x2_same_factors": false,
+    "tau_constant_across_cells": true,
+    "eligible_as_primary": false,
+    "note": "If tau varies across cells it is a third factor and the estimand is not E1's quantity; e1_sensitivity is also non-preregistered (outside the frozen hypothesis files)."
+  },
+  "degeneracy_by_experiment": {
+    "e1_rtk_compaction": {
+      "n": 48,
+      "degenerate": 0,
+      "non_degenerate": 48
+    },
+    "e1_sensitivity": {
+      "n": 72,
+      "degenerate": 48,
+      "non_degenerate": 24
+    },
+    "e1b_rtk_cod": {
+      "n": 144,
+      "degenerate": 104,
+      "non_degenerate": 40
+    }
+  }
+}

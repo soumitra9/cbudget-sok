@@ -1,0 +1,59 @@
+{
+  "purpose": "Phase 2 corpus precondition gate: verify Option D is a live (novel) destination and re-scope C1 BEFORE freezing the decision rule.",
+  "date_run": "2026-09-11",
+  "paper_search_cutoff": "2026-07",
+  "findings": {
+    "option_D_novelty": {
+      "verdict": "SUBSTANTIALLY_PREEMPTED",
+      "evidence": [
+        {
+          "id": "arXiv:2607.12161",
+          "title": "Token Reduction Is Not Cost Reduction: An Empirical Study of End-to-End Efficiency in API-Based Coding Agents",
+          "why_it_preempts": "Explicitly decomposes token change into a per-turn savings term and a trajectory (Delta turns) term over PAIRED blocks, with success-adjusted end-to-end cost as the primary metric, on coding agents (SWE-bench Go subset). This is the replay-vs-trajectory decomposition Option D planned, done with a stronger paired-counterfactual, provider-billed design.",
+          "date": "2026-07"
+        },
+        {
+          "id": "arXiv:2608.16370",
+          "title": "What Does Context Compression Cost an Agent? Interaction Costs Unrevealed by Task-Completion Metrics",
+          "why_it_preempts": "Thesis is that completion/cumulative metrics hide compression's interaction (trajectory) costs; uses paired counterfactual state injection to attribute reacquisition cost. Same core claim as Option D.",
+          "date": "2026-08"
+        },
+        {
+          "id": "arXiv:2608.06503",
+          "title": "Toward Reliable Context Compression for Long-Horizon Agents: Execution Instability",
+          "why_it_preempts": "Paired PRE/POST-compression control from the same execution state; marginal per-step effects. Same paired-replay methodology family.",
+          "date": "2026-08"
+        }
+      ],
+      "what_survives": "The paper's ANALYTIC budget-recurrence model (Eqs 4-8) DERIVES the replay term a priori from S, O_k, A_k recurrence; the pre-empting papers MEASURE the split empirically but do not derive it from a recurrence model. A theory-vs-measurement framing (does the observed replay/trajectory split match the analytic prediction, on an open self-hosted model) is the narrow surviving novelty. The pure 'we decompose' framing is no longer novel."
+    },
+    "C1_absence_claim": {
+      "verdict": "SIGNIFICANCE_ERODED_literal_claim_borderline",
+      "missed_in_scope_or_adjacent": [
+        {"id": "arXiv:2510.00615", "title": "ACON", "note": "one method spanning Category 2 (observations) + 3 (history); ICML 2026; missing from Table 1/4"},
+        {"id": "arXiv:2509.23586", "title": "AgentDiet (FSE'26)", "note": "Category 2/3 trajectory reduction; reports Step vs PStep (all vs resolved-only); peer-reviewed; missing"},
+        {"id": "arXiv:2604.03679", "title": "LightThinker++", "note": "reasoning compression (Cat 4) + adaptive memory management (Cat 3-like) in agentic tasks; relates to mem1/memagent/agentfold/context-folding"}
+      ],
+      "strict_two_method_cross_category_composition_found": false,
+      "note": "No paper found that composes TWO SEPARATE methods from different intervention-point categories with individual baselines, so C1's literal Boolean is borderline-survivable. But the corpus missed several obvious in-scope papers, and multiple single methods now span categories, so C1's significance as a headline gap is weak."
+    },
+    "SAC_equals_cost_of_pass": {
+      "verdict": "CONFIRMED",
+      "note": "Draft 6.3 SAC = sum PT / sum success is cost-of-pass v=C/R (arXiv:2504.13359, used by Efficient Agents 2508.02694; see also AI Agents That Matter 2407.01502, CLEAR/CNA). Must be relabelled and cited."
+    }
+  },
+  "timeline": {
+    "hypothesis_freeze_date": "2026-07-15",
+    "arxiv:2607.12161": {"public_date": "2026-07-14 (HuggingFace 'Published on Jul 14')", "relation_to_freeze": "posted 1 day BEFORE freeze; could not have informed the preregistration -> CONCURRENT, not prior art", "note": "studies RTK specifically (same tool as this paper); pre-specified hash-frozen paired campaign; reaches compatible conclusion by paired provider-billed design"},
+    "arxiv:2608.16370": {"public_date": "2026-08", "relation_to_freeze": "AFTER freeze -> CONCURRENT"},
+    "arxiv:2604.03679_LightThinker++": {"public_date": "2026-04", "relation_to_freeze": "BEFORE freeze -> genuine PRIOR ART for C1 category-spanning; missed in original corpus"},
+    "arxiv:2407.01502_AIAgentsThatMatter": {"public_date": "2024-07", "relation_to_freeze": "prior art on eval rigor / cost-of-pass; adjacent to but does NOT pre-empt the process-based degeneracy diagnostic (that is a per-run determinism/duplication filter, a different contribution); frame degeneracy as supporting artifact, not headline"}
+  },
+  "decision": {
+    "null_branch_redefined_to": "D-prime: analytic budget-recurrence model (Eqs 4-8) that PREDICTS the replay/trajectory split a priori, calibrated against measured runs; experiments reframed from hypothesis-test to CALIBRATION data (a result either way); concurrent work (2607.12161, 2608.16370) cited as independent corroboration by different means. This survives because the concurrent papers MEASURE the split post hoc but do not DERIVE its magnitude from a recurrence model.",
+    "primary_experiment": "E1 (rtk x compaction), NOT E2.",
+    "primary_selection_basis": "Process integrity, decided pre-outcome: E1 has ZERO degeneracy, needs NO post-treatment filtering, and retains full 6-task coverage in all 4 cells. E2 degeneracy loads on the CoD arms (28 vs 24; distinct non-degenerate tasks drop 6->5), so filtering E2 to obtain the interaction is post-treatment conditioning on a collider (the Amendment 2 problem via a different door). E2's larger raw effective-n (17-18) is illusory because reaching it requires a collider-inducing filter. E2 is therefore reported descriptively/secondary, with the collider caveat.",
+    "freeze_discipline": "Freeze only if both branch outcomes are acceptable landing places; YAML records a per-branch one-sentence description so the asymmetry is on the record."
+  },
+  "consequence_for_freeze": "Option D redefined to D-prime BEFORE freeze (gate satisfied). Primary=E1 on process-integrity grounds. Proceed to Phase 3 freeze."
+}
