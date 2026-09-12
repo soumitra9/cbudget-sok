@@ -51,28 +51,38 @@ def cell_table(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def oaxaca(tab: pd.DataFrame, ref=(0, 0), treat=(1, 1)) -> dict:
+    """Decompose Eq.8 for the ref->treat contrast.
+    Per main.tex line 128: REPLAY = mechanical reduction at FIXED trajectory length
+    (the per-turn / occupancy term, T_ref * dOcc); TRAJECTORY = change in total turns
+    (dTurns * Occ_ref). Eqs 4-7 derive only the replay component."""
+
     def get(cell, col):
         row = tab[(tab.rtk_on == cell[0]) & (tab.factor_b_on == cell[1])].iloc[0]
         return float(row[col])
 
-    T00, O00 = get(ref, "mean_turns"), get(ref, "occ")
-    T11, O11 = get(treat, "mean_turns"), get(treat, "occ")
-    dT, dO = T11 - T00, O11 - O00
-    delta_pt = T11 * O11 - T00 * O00
-    replay = dT * O00          # trajectory-length change valued at baseline per-turn cost
-    per_turn = T00 * dO        # per-turn occupancy change over baseline trajectory length
-    remainder = dT * dO        # interaction of the two deltas
+    T_ref, O_ref = get(ref, "mean_turns"), get(ref, "occ")
+    T_tr, O_tr = get(treat, "mean_turns"), get(treat, "occ")
+    dT, dO = T_tr - T_ref, O_tr - O_ref
+    delta_pt = T_tr * O_tr - T_ref * O_ref
+    replay = T_ref * dO         # mechanical per-turn reduction at fixed trajectory length
+    trajectory = dT * O_ref     # change in number of turns (trajectory length)
+    remainder = dT * dO         # interaction of the two deltas (cross term)
     ratio = abs(remainder) / abs(delta_pt) if delta_pt else float("nan")
+    frac = (lambda x: x / delta_pt if delta_pt else float("nan"))
     return {
         "reference_cell": f"Y{ref[0]}{ref[1]}",
         "treated_cell": f"Y{treat[0]}{treat[1]}",
         "delta_pt": delta_pt,
-        "replay_term_dturns_x_occ": replay,
-        "per_turn_term_turns_x_docc": per_turn,
+        "replay_term_turns_x_docc": replay,
+        "trajectory_term_dturns_x_occ": trajectory,
         "remainder_dT_x_dO": remainder,
-        "remainder_ratio": ratio,
+        "frac_replay": frac(replay),
+        "frac_trajectory": frac(trajectory),
+        "frac_remainder": frac(remainder),
+        "frac_sum_check": frac(replay) + frac(trajectory) + frac(remainder),
+        "remainder_ratio_abs": ratio,
         "clean_separation": bool(ratio < 0.15),
-        "components_sum_check": replay + per_turn + remainder,
+        "components_sum_check": replay + trajectory + remainder,
     }
 
 
@@ -145,7 +155,34 @@ def main() -> None:
                 "caveat": "success is post-treatment (collider); descriptive only, no inference",
             },
         },
-        "oaxaca_e1": oaxaca(tab_e1),
+        "oaxaca_e1": {
+            # full composition (both factors) confounds the two interventions:
+            "full_Y00_to_Y11": oaxaca(tab_e1, (0, 0), (1, 1)),
+            # single-factor contrasts to attribute per-turn (replay) savings to each intervention:
+            "rtk_effect_at_compaction_off_Y00_to_Y10": oaxaca(tab_e1, (0, 0), (1, 0)),
+            "rtk_effect_at_compaction_on_Y01_to_Y11": oaxaca(tab_e1, (0, 1), (1, 1)),
+            "compaction_effect_at_rtk_off_Y00_to_Y01": oaxaca(tab_e1, (0, 0), (0, 1)),
+            "compaction_effect_at_rtk_on_Y10_to_Y11": oaxaca(tab_e1, (1, 0), (1, 1)),
+        },
+        "estimator_efficiency": {
+            "raw_pt_interaction_ci_width": 50140.531249999985 - (-46983.85416666667),
+            "per_turn_pt_interaction_ci_width": primary["ci_high"] - primary["ci_low"],
+            "precision_gain_x": (50140.531249999985 - (-46983.85416666667))
+            / (primary["ci_high"] - primary["ci_low"]),
+            "variance_gain_approx_x": (
+                (50140.531249999985 - (-46983.85416666667)) / (primary["ci_high"] - primary["ci_low"])
+            )
+            ** 2,
+            "interpretation": (
+                "Normalising the cumulative-PT factorial interaction by turns shrinks the 95% CI "
+                "width ~32x (variance ~1000x), converting an uninformative interval into a precise "
+                "null. Since trajectory (turns) contributes only ~3% of the MEAN effect (Oaxaca) but "
+                "removing turn-count heterogeneity drives the ~32x SD reduction, trajectory "
+                "heterogeneity accounts for the overwhelming majority of the raw estimand's VARIANCE "
+                "while barely moving its mean. This is an estimator-efficiency result, not a "
+                "decomposition-of-the-mean result."
+            ),
+        },
     }
     OUT_JSON.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps(result, indent=2))

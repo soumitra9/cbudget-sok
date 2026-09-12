@@ -4,46 +4,71 @@
   "provenance": {
     "phase0_gate": "PASS byte-exact (E1 +2897.5 / [-46984,+50141]; E2 -5.06 / [-407,+374])",
     "rule_sha256_file": "reanalysis/rule_frozen.sha256",
-    "input_data_sha256": "b5190d6be4775160326e3fa234296a7883ee4182dad3ed8e82ed7b7808f1e99c"
+    "input_data_sha256": "b5190d6be4775160326e3fa234296a7883ee4182dad3ed8e82ed7b7808f1e99c",
+    "label_convention": "Per main.tex line 128 (Eq.8): REPLAY = mechanical per-turn reduction at FIXED trajectory length (turns * dOcc); TRAJECTORY = change in total turns (dTurns * Occ). Eqs 4-7 derive only the replay component."
   },
   "primary_outcome": {
     "estimand": "E1 rtk x compaction, per-turn PT interaction Y11-Y10-Y01+Y00",
     "point": 89.94,
     "ci95": [-1467.06, 1581.71],
-    "verdict": "includes zero -> honest null",
+    "verdict": "includes zero -> precise null",
     "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first)"
   },
-  "why_this_is_a_result_not_a_non_finding": [
-    "Editor point 3 (normalise by turns, not raw token sums) is implemented: per-turn normalisation tightened the CI from +/-48k (raw) to +/-1.5k, and the interaction is still null. The null is now precise, not an artifact of aggregation noise.",
-    "The Oaxaca decomposition of Eq.8 gives a clean, positive statement: the -27,039-token saving of the full intervention pair is 98% per-turn (occupancy) and ~3% replay (trajectory), remainder 1.3%. Savings are per-turn, not trajectory-driven, for this pair.",
-    "Determinism/degeneracy diagnostic: 104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories), so nominal replication is largely illusory. This is a reusable measurement artifact and explains why aggregate token sums were so noisy."
-  ],
+  "headline_thesis_D_prime": {
+    "claim": "Cumulative-token estimands in factorial agent evaluations are variance-inflated into uninformativeness by trajectory-length heterogeneity that barely moves the mean; normalising by turns recovers ~32x precision, converting an uninformative interval into a precise null.",
+    "why_this_is_the_better_paper": "It is an estimator-efficiency claim (demonstrated, not asserted), a direct answer to editor point 3, and NOT pre-empted by arXiv:2607.12161 (which makes a decomposition-of-the-mean claim). The analytic replay model (Eqs 4-7) additionally accounts for ~98% of the observed mean PT saving, so the reanalysis is a calibration success for the model, not a non-result.",
+    "supersedes_prior_framing": "The earlier 'cumulative metrics mostly measure completion/trajectory' framing is contradicted by our own decomposition at the level of the MEAN (trajectory = 3%). The correct split is mean vs variance: 3% of the mean, ~99.9% of the variance."
+  },
+  "estimator_efficiency": {
+    "raw_pt_interaction_ci_width": 97124.4,
+    "per_turn_pt_interaction_ci_width": 3048.8,
+    "precision_gain_x": 31.9,
+    "variance_gain_approx_x": 1015
+  },
+  "oaxaca_eq8_e1": {
+    "labels": "replay = per-turn (turns*dOcc); trajectory = turns-count (dTurns*Occ)",
+    "full_composition_Y00_to_Y11": {"delta_pt": -27039, "replay_pct": 98.3, "trajectory_pct": 2.9, "remainder_pct": -1.3, "note": "confounds both factors; shown for the total effect only"},
+    "attribution_single_factor": {
+      "compaction_at_rtk_off_Y00_to_Y01": {"delta_pt": -24944, "replay_pct": 89.9, "trajectory_pct": 15.9, "remainder_pct": -5.8},
+      "compaction_at_rtk_on_Y10_to_Y11": {"delta_pt": -22047, "replay_pct": 100.7, "trajectory_pct": -1.1, "remainder_pct": 0.4},
+      "rtk_at_compaction_off_Y00_to_Y10": {"delta_pt": -4992, "replay_pct": 80.2, "trajectory_pct": 21.2, "remainder_pct": -1.4},
+      "rtk_at_compaction_on_Y01_to_Y11": {"delta_pt": -2095, "replay_pct": 185.9, "trajectory_pct": -96.2, "remainder_pct": 10.3, "caveat": "small denominator (-2095 PT) makes percentages unstable"}
+    },
+    "interpretation": "The PT saving is driven by COMPACTION (delta_pt -22k to -25k), ~90-100% through the replay (per-turn) channel. RTK's own effect is small (-2k to -5k). The interaction (does RTK modify compaction's effect) is the precise null above."
+  },
   "supporting_results": {
-    "turns_interaction_e1": {"point": 1.33, "ci95": [-8.34, 12.17], "verdict": "null; trajectory length ~18-19 turns in every cell"},
-    "e2_gt_per_turn_interaction_DESCRIPTIVE": {"point": 10.28, "ci95": [-0.58, 22.66], "caveat": "collider (degeneracy loads on CoD arms 28 vs 24) + gt=11 collapse; descriptive only"},
-    "success_only_e1_DESCRIPTIVE": {"point": 132.75, "n_success": 22, "caveat": "success is post-treatment (collider); no inference"}
+    "turns_interaction_e1": {"point": 1.33, "ci95": [-8.34, 12.17], "verdict": "null; trajectory length ~18-19 turns in every cell (why the trajectory term is small)"},
+    "e2_gt_per_turn_interaction_DESCRIPTIVE": {"point": 10.28, "ci95": [-0.58, 22.66], "caveat": "descriptive only; degeneracy + gt=11 collapse contamination"},
+    "success_only_e1_DESCRIPTIVE": {"point": 132.75, "n_success": 22, "caveat": "success is post-treatment (collider); no inference"},
+    "degeneracy_diagnostic": "104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories); a reusable measurement artifact, framed as supporting (AI Agents That Matter 2407.01502 critiques eval design but does not provide this per-run determinism/duplication filter)."
   },
-  "paper_under_this_branch_D_prime": {
-    "contribution": "Analytic budget-recurrence model (Eqs 4-8) that PREDICTS the replay/trajectory split a priori, CALIBRATED against measured runs. The observed 98%/3% per-turn/replay split for the compaction+rtk pair is the calibration datum.",
-    "positioning_vs_concurrent_work": "Cite arXiv:2607.12161 (posted 2026-07-14, one day before the 2026-07-15 freeze, on RTK specifically) and arXiv:2608.16370 (Aug 2026) as independent, concurrent corroboration reached by a different (paired provider-billed) method. They MEASURE the split; this work DERIVES its magnitude from a recurrence model. TMLR does not score novelty, so concurrency is neutral-to-positive.",
-    "must_fix_from_corpus_gate": [
-      "Relabel SAC as cost-of-pass v=C/R and cite arXiv:2504.13359 (+ Efficient Agents 2508.02694, AI Agents That Matter 2407.01502).",
-      "Add ACON (2510.00615), AgentDiet (2509.23586), LightThinker++ (2604.03679) to the taxonomy; re-scope C1 to an honest, narrow claim (no strict two-method cross-category composition with individual baselines found), not a headline gap."
-    ]
+  "errata_and_corrections": {
+    "oaxaca_label_swap_fixed": "An earlier run reported '98% per-turn / 3% replay', naming the per-turn component twice, and had the JSON keys backwards (replay_term_dturns_x_occ / per_turn_term_turns_x_docc). Corrected per Eq.8: REPLAY = turns*dOcc (98.3%), TRAJECTORY = dturns*Occ (2.9%), remainder -1.3%, sum 100%. Keys are now replay_term_turns_x_docc / trajectory_term_dturns_x_occ. The math was always right; only the names were wrong.",
+    "e2_collider_CONFIRMED": "Degeneracy by arm: Y00 24/36 (67%), Y10 24/36 (67%), Y01 28/36 (78%), Y11 28/36 (78%). Perfectly arm-consistent, 11 points higher in BOTH CoD cells, in exactly the direction Table 1 predicts for CoD's zero-shot-collapse failure mode. This is treatment-induced, not noise; filtering E2 to get the interaction is post-treatment conditioning on a collider. (An interim note comparing against the ~26/cell average mistakenly read this as balance; the correct comparison is the arm contrast, and the frozen YAML's collider basis stands.)",
+    "e1_primacy_robust_grounds": "E1 is the primary on grounds that survive scrutiny: (a) zero process-degenerate runs, no filtering needed, (b) full 12 runs and six distinct tasks per cell, (c) PT is the exact outcome the editor objected to; and independently, E2's interaction requires collider-inducing filtering. E2 remains descriptive."
   },
+  "limitations_to_state_in_paper": {
+    "block_bootstrap_12_blocks": "The primary CI is a task-seed block bootstrap over only n_blocks=12 (6 tasks x 2 seeds). Block bootstrap coverage with so few blocks is known to be anti-conservative, so the [-1467, +1582] interval is probably slightly NARROWER than nominal. This does not threaten the null (a wider interval still spans zero) but must be stated as a limitation rather than left for a reviewer, and it argues against over-precise claims about the magnitude.",
+    "seed_expansion_underdelivered": "The 2->6 seed expansion was described as a deliberate power decision, but at temperature 0.2 it delivered ~1 extra distinct trajectory per cell, not 4: E1 (2 seeds) = 2.0 distinct/cell (100%), E2 (6 seeds) = 2.9 distinct/cell. Seeds mostly reproduced duplicates. The revision must say this plainly and is why Option B needs more TASKS, not more seeds."
+  },
+  "paper_must_fix_from_corpus_gate": [
+    "Relabel SAC as cost-of-pass v=C/R and cite arXiv:2504.13359 (+ Efficient Agents 2508.02694, AI Agents That Matter 2407.01502).",
+    "Add ACON (2510.00615), AgentDiet (2509.23586), LightThinker++ (2604.03679, PRE-freeze prior art) to the taxonomy; re-scope C1 to an honest narrow claim (no strict two-method cross-category composition with individual baselines found), not a headline gap.",
+    "Cite arXiv:2607.12161 generously and state its date plainly: posted 2026-07-14, one day before our 2026-07-15 hypothesis freeze. Technically prior by a day; we could not have incorporated it. Let the reader judge; TMLR does not score novelty. It studies RTK specifically and reaches a compatible conclusion by a paired provider-billed method (a decomposition-of-the-mean); our contribution is the estimator-efficiency result plus the analytic replay model that predicts the mean split."
+  ],
   "option_B_feasibility": {
     "B_and_D_prime_not_mutually_exclusive": true,
-    "line": "D-prime ships now on existing data. Option B (breadth across task types / method pairs) is the funded follow-up. Critically, more SEEDS will NOT buy power at temperature 0.2 (E2 shows seeds collapse to ~2-3 distinct trajectories per cell); B must add TASKS and task FAMILIES (only code-repair fixtures exist now) and/or raise temperature, not seeds. This is the concrete scaling requirement the editor's point 2 asks for.",
-    "cost_note": "Compute is the binding constraint (A40 + vLLM, self-hosted). Breadth is a resourcing question, not a design flaw; D-prime does not depend on it."
+    "line": "D-prime ships now on existing data. Option B (breadth across task families / method pairs) is the funded follow-up. More SEEDS will NOT buy power at temperature 0.2 (E2 seeds collapse to ~2-3 distinct trajectories per cell); B must add TASKS and task FAMILIES (only code-repair fixtures exist now) and/or raise temperature.",
+    "cost_note": "Compute is the binding constraint (A40 + vLLM, self-hosted). Breadth is resourcing, not a design flaw; D-prime does not depend on it."
   },
   "editor_criticism_response_map": {
-    "1_exposition_spec_list": "Addressed in Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
-    "2_composition_more_extensive_across_task_types": "Acknowledged as a limitation (single code-repair family). Reframed: D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
-    "3_statistical_relevance_success_split_or_normalise_by_turns": "DONE: primary is per-turn (normalised by turns); success-stratified shown descriptively with the collider caveat; degeneracy diagnostic exposes effective-n.",
-    "4_conclusions_significance": "D-prime: a validated predictive recurrence model + precise per-turn null + clean Eq.8 decomposition + the 72% degeneracy finding constitute a measurement contribution, not a non-result."
+    "1_exposition_spec_list": "Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
+    "2_composition_more_extensive_across_task_types": "Acknowledged limitation (single code-repair family). D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
+    "3_statistical_relevance_success_split_or_normalise_by_turns": "DONE: per-turn normalisation is the primary and yields the 32x precision gain (uninformative interval -> precise null); success-stratified shown descriptively with the collider caveat; degeneracy diagnostic exposes effective-n.",
+    "4_conclusions_significance": "D-prime: validated predictive replay model (98% of mean) + the estimator-efficiency result + clean Eq.8 attribution + the 72% degeneracy finding constitute a measurement contribution, not a non-result."
   },
   "next_steps_needing_user_go_ahead": [
-    "Phase 6: create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen) and rewrite exposition + integrate D-prime and corpus fixes.",
+    "Phase 6: create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen) and rewrite exposition + integrate the estimator-efficiency thesis and corpus fixes.",
     "Phase 7: TMLR reformat, relabel SAC, deposit reanalysis/run_summary_enriched.csv to a data repository."
   ]
 }

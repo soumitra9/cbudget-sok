@@ -120,7 +120,7 @@ def main() -> None:
     df = pd.read_csv(ENRICHED)
     det = determinism_report(df)
     report = {
-        "source": str(ENRICHED),
+        "source": "reanalysis/run_summary_enriched.csv",
         "determinism": det,
         "bug_vs_temperature": bug_vs_temperature(det),
         "e1_sensitivity_eligibility": e1_sensitivity_eligibility(df),

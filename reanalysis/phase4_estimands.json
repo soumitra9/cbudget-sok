@@ -41,14 +41,87 @@
     }
   },
   "oaxaca_e1": {
-    "reference_cell": "Y00",
-    "treated_cell": "Y11",
-    "delta_pt": -27039.0,
-    "replay_term_dturns_x_occ": -793.7284482758621,
-    "per_turn_term_turns_x_docc": -26589.096069868996,
-    "remainder_dT_x_dO": 343.82451814485773,
-    "remainder_ratio": 0.012715874039160389,
-    "clean_separation": true,
-    "components_sum_check": -27039.0
+    "full_Y00_to_Y11": {
+      "reference_cell": "Y00",
+      "treated_cell": "Y11",
+      "delta_pt": -27039.0,
+      "replay_term_turns_x_docc": -26589.096069868996,
+      "trajectory_term_dturns_x_occ": -793.7284482758621,
+      "remainder_dT_x_dO": 343.82451814485773,
+      "frac_replay": 0.9833609256950699,
+      "frac_trajectory": 0.029354948344090467,
+      "frac_remainder": -0.012715874039160389,
+      "frac_sum_check": 1.0,
+      "remainder_ratio_abs": 0.012715874039160389,
+      "clean_separation": true,
+      "components_sum_check": -27039.0
+    },
+    "rtk_effect_at_compaction_off_Y00_to_Y10": {
+      "reference_cell": "Y00",
+      "treated_cell": "Y10",
+      "delta_pt": -4992.416666666664,
+      "replay_term_turns_x_docc": -4003.1315789473733,
+      "trajectory_term_dturns_x_occ": -1058.3045977011457,
+      "remainder_dT_x_dO": 69.01950998185102,
+      "frac_replay": 0.8018424434954431,
+      "frac_trajectory": 0.21198242621999622,
+      "frac_remainder": -0.013824869715438625,
+      "frac_sum_check": 1.0000000000000007,
+      "remainder_ratio_abs": 0.013824869715438625,
+      "clean_separation": true,
+      "components_sum_check": -4992.416666666668
+    },
+    "rtk_effect_at_compaction_on_Y01_to_Y11": {
+      "reference_cell": "Y01",
+      "treated_cell": "Y11",
+      "delta_pt": -2094.9166666666715,
+      "replay_term_turns_x_docc": -3894.5323871906908,
+      "trajectory_term_dturns_x_occ": 2014.9815668202768,
+      "remainder_dT_x_dO": -215.3658462962594,
+      "frac_replay": 1.8590392874135082,
+      "frac_trajectory": -0.9618433033073418,
+      "frac_remainder": 0.10280401589383456,
+      "frac_sum_check": 1.0000000000000009,
+      "remainder_ratio_abs": 0.10280401589383456,
+      "clean_separation": true,
+      "components_sum_check": -2094.9166666666733
+    },
+    "compaction_effect_at_rtk_off_Y00_to_Y01": {
+      "reference_cell": "Y00",
+      "treated_cell": "Y01",
+      "delta_pt": -24944.08333333333,
+      "replay_term_turns_x_docc": -22425.356374807983,
+      "trajectory_term_dturns_x_occ": -3968.6422413793107,
+      "remainder_dT_x_dO": 1449.9152828539645,
+      "frac_replay": 0.899025074408747,
+      "frac_trajectory": 0.1591015467814737,
+      "frac_remainder": -0.05812662119022072,
+      "frac_sum_check": 1.0,
+      "remainder_ratio_abs": 0.05812662119022072,
+      "clean_separation": true,
+      "components_sum_check": -24944.08333333333
+    },
+    "compaction_effect_at_rtk_on_Y10_to_Y11": {
+      "reference_cell": "Y10",
+      "treated_cell": "Y11",
+      "delta_pt": -22046.583333333336,
+      "replay_term_turns_x_docc": -22196.551310043666,
+      "trajectory_term_dturns_x_occ": 247.32127192982102,
+      "remainder_dT_x_dO": -97.35329521948837,
+      "frac_replay": 1.0068023228108813,
+      "frac_trajectory": -0.011218122472332644,
+      "frac_remainder": 0.004415799661451171,
+      "frac_sum_check": 0.9999999999999999,
+      "remainder_ratio_abs": 0.004415799661451171,
+      "clean_separation": true,
+      "components_sum_check": -22046.583333333332
+    }
+  },
+  "estimator_efficiency": {
+    "raw_pt_interaction_ci_width": 97124.38541666666,
+    "per_turn_pt_interaction_ci_width": 3048.7745277928093,
+    "precision_gain_x": 31.856860693132603,
+    "variance_gain_approx_x": 1014.8595732216571,
+    "interpretation": "Normalising the cumulative-PT factorial interaction by turns shrinks the 95% CI width ~32x (variance ~1000x), converting an uninformative interval into a precise null. Since trajectory (turns) contributes only ~3% of the MEAN effect (Oaxaca) but removing turn-count heterogeneity drives the ~32x SD reduction, trajectory heterogeneity accounts for the overwhelming majority of the raw estimand's VARIANCE while barely moving its mean. This is an estimator-efficiency result, not a decomposition-of-the-mean result."
   }
 }

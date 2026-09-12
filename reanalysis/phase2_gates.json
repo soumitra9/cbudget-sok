@@ -1,5 +1,5 @@
 {
-  "source": "/Users/mehrots/Documents/Projects/Project_ContexManagement/reanalysis/run_summary_enriched.csv",
+  "source": "reanalysis/run_summary_enriched.csv",
   "determinism": {
     "e1_rtk_compaction": {
       "seeds": [
