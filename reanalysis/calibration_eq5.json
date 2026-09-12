@@ -1,0 +1,79 @@
+{
+  "test": "Eq.5 full-retention prediction vs observed dPT for RTK (falsifiable)",
+  "cell_means": [
+    {
+      "rtk_on": 0,
+      "factor_b_on": 0,
+      "pt": 61381.666666666664,
+      "O_total": 2049.5833333333335,
+      "W_tool_weighted": 25652.583333333332,
+      "W_gen_weighted": 30568.333333333332,
+      "uniform_tool": 27316.541666666668,
+      "retention_ratio": 0.993666827343528,
+      "T": 19.333333333333332
+    },
+    {
+      "rtk_on": 0,
+      "factor_b_on": 1,
+      "pt": 36437.583333333336,
+      "O_total": 1155.75,
+      "W_tool_weighted": 13018.5,
+      "W_gen_weighted": 38257.166666666664,
+      "uniform_tool": 14701.041666666666,
+      "retention_ratio": 0.8301435091219846,
+      "T": 18.083333333333332
+    },
+    {
+      "rtk_on": 1,
+      "factor_b_on": 0,
+      "pt": 56389.25,
+      "O_total": 817.1666666666666,
+      "W_tool_weighted": 10401.333333333334,
+      "W_gen_weighted": 40971.25,
+      "uniform_tool": 10725.916666666666,
+      "retention_ratio": 0.9933017232115854,
+      "T": 19.0
+    },
+    {
+      "rtk_on": 1,
+      "factor_b_on": 1,
+      "pt": 34342.666666666664,
+      "O_total": 782.5,
+      "W_tool_weighted": 9768.666666666666,
+      "W_gen_weighted": 24608.666666666668,
+      "uniform_tool": 10160.041666666666,
+      "retention_ratio": 0.9366520009806855,
+      "T": 19.083333333333332
+    }
+  ],
+  "rtk_contrasts": [
+    {
+      "contrast": "RTK at compaction_off (Y00->Y10)",
+      "observed_dPT": -4992.416666666664,
+      "uniform_pred_dPT": -16590.625,
+      "weighted_pred_dPT": -15251.249999999998,
+      "uniform_over_observed": 3.3231651337862442,
+      "weighted_over_observed": 3.0548832395800307,
+      "d_gen_amplified": 10402.916666666668,
+      "gen_offset_of_tool_saving": 0.682102559899462,
+      "toolplusgen_pred_dPT": -4848.33333333333,
+      "toolplusgen_over_observed": 0.9711395616685304,
+      "mean_retention_ref": 0.993666827343528,
+      "mean_retention_treat": 0.9933017232115854
+    },
+    {
+      "contrast": "RTK at compaction_on (Y01->Y11)",
+      "observed_dPT": -2094.9166666666715,
+      "uniform_pred_dPT": -4541.0,
+      "weighted_pred_dPT": -3249.833333333334,
+      "uniform_over_observed": 2.167627988384577,
+      "weighted_over_observed": 1.551294800906954,
+      "d_gen_amplified": -13648.499999999996,
+      "gen_offset_of_tool_saving": -4.199753833529923,
+      "toolplusgen_pred_dPT": -16898.33333333333,
+      "toolplusgen_over_observed": 8.066351087950972,
+      "mean_retention_ref": 0.8301435091219846,
+      "mean_retention_treat": 0.9366520009806855
+    }
+  ]
+}

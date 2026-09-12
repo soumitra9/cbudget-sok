@@ -15,9 +15,22 @@
     "branch_taken": "primary_ci_includes_zero -> D-prime (theory-first calibration)"
   },
   "headline_thesis_D_prime": {
-    "claim": "Theory-first calibration: the a priori replay model (Eqs 4-8) predicts the replay component of the token saving, and the measured Oaxaca decomposition confirms it - replay accounts for 98.3% of the full-contrast PT saving, remainder 1.3%. A model predicting a quantity and the measurement agreeing.",
-    "why_this_is_the_contribution": "The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures the split POST HOC; none derive its magnitude from a recurrence model a priori. That is the differentiator, and it needs no efficiency claim to stand.",
-    "attribution": "Compaction drives the saving (delta_pt -22k to -25k, ~90-100% via the replay channel); RTK small (-2k to -5k); interaction null."
+    "claim": "Theory-first, and the model is FALSIFIED in an informative way. Eq.5 (full-retention: a tool-output reduction dO_k propagates to dPT = dO_k*(T-k)) predicts RTK's PT saving. Using ACTUAL per-turn tool-output positions, the weighted prediction is -15,251 PT, but the OBSERVED saving is -4,992: the model OVER-PREDICTS by 3.05x.",
+    "why_it_over_predicts": "Not caching/truncation: history retention is ~0.99 in the compaction-off arm. The gap is downstream BEHAVIOUR - the 'fixed downstream behaviour' assumption fails. The generation-replay term rises +10,403 (offsetting 68% of the mechanical tool saving): the agent generates more when tool output is compressed. The full recurrence ACCOUNTING is correct - tool-replay + generation-replay reconstruct observed dPT to 0.97x - it is the fixed-behaviour ASSUMPTION that breaks.",
+    "why_this_is_the_contribution": "'We derived a recurrence model, tested Eq.5 against measurement, and it over-predicts 3.05x because compression is 68% offset by increased generation' is a genuine, quantified, theory-first result. The cost-of-pass / measurement line (incl. arXiv:2607.12161) measures splits post hoc; none derive an a priori prediction and test it. Evidence: reanalysis/calibration_eq5.json.",
+    "falsifiability_note": "Unlike the Eq.8 Oaxaca identity (which sums to dPT for ANY data), this test COULD have failed and did - that is what makes it a finding."
+  },
+  "calibration_eq5_test": {
+    "contrast": "RTK at compaction_off (Y00->Y10), retention ~0.99 (full)",
+    "observed_dPT": -4992,
+    "eq5_weighted_tool_prediction": -15251,
+    "eq5_over_observed": 3.05,
+    "uniform_tool_prediction": -16591,
+    "generation_replay_change": 10403,
+    "generation_offset_pct": 68,
+    "tool_plus_generation_reconstruction": -4848,
+    "reconstruction_over_observed": 0.97,
+    "caveat": "n=12/cell; the generation-offset magnitude is imprecise, but the robust, assumption-free result is the 3.05x Eq.5 over-prediction under near-full retention. The compaction-ON arm (Y01->Y11) has retention ~0.83 (compaction truncates history mid-run) and is confounded; it needs the separate Eq-2/3 compaction test."
   },
   "normalisation_units_not_precision": {
     "raw_pt_interaction": {"estimate": 2897.5, "ci_halfwidth": 48562.2, "ci_over_abs_estimate": 16.76},
@@ -26,6 +39,7 @@
     "finding": "Dividing PT by turns (mean turns ~32) rescales BOTH the estimate and the CI by ~32, so relative precision CI/|estimate| is UNCHANGED (16.8 vs 17.0). An earlier version of this memo claimed '~32x precision / uninformative -> precise null'; that was WRONG - a units change, not a precision gain (variance_gain 1014 = 31.86^2, the squared units factor). The editor's specific remedy (normalise by turns) does NOT tighten inference for this dataset because turn counts barely vary across cells (turns interaction +1.33, CI [-8.3,+12.2], null); the imprecision is genuine between-task/between-run per-turn-occupancy dispersion, which normalisation cannot remove. The revision should say this plainly, using the decomposition as support."
   },
   "oaxaca_eq8_e1": {
+    "status": "DESCRIPTIVE ATTRIBUTION ONLY - not a model test. Eq.8 is an algebraic identity that sums to dPT for any dataset; the 98.3%/2.9% split verifies arithmetic (frac_sum_check=1.0), not the recurrence theory. It says WHERE the saving sits, not whether the model predicted it. The model test is calibration_eq5_test above.",
     "labels": "replay = per-turn (turns*dOcc); trajectory = turns-count (dTurns*Occ)",
     "full_composition_Y00_to_Y11": {"delta_pt": -27039, "replay_pct": 98.3, "trajectory_pct": 2.9, "remainder_pct": -1.3, "note": "confounds both factors; shown for the total effect only"},
     "attribution_single_factor": {
@@ -43,6 +57,7 @@
     "degeneracy_diagnostic": "104/144 E2 runs (72%) are process-degenerate (temperature-0.2 duplicate/trivial trajectories); a reusable measurement artifact, framed as supporting (AI Agents That Matter 2407.01502 critiques eval design but does not provide this per-run determinism/duplication filter)."
   },
   "errata_and_corrections": {
+    "oaxaca_confirms_model_claim_RETRACTED": "A prior version said the a priori replay model is confirmed because the Oaxaca split attributes 98.3% to replay. RETRACTED as circular: Eq.8 is an identity (sums to dPT for any data), so 98.3% tests arithmetic against itself, and the paper itself calls Eq.8 'decomposed conceptually' (a definition, not a prediction). The falsifiable content is in Eqs 4-7; the honest test (calibration_eq5) shows Eq.5 OVER-predicts 3.05x. Third circular claim caught pre-submission (after the 32x and this); standing rule now: for every claim, ask what result would have falsified it - if nothing would, it is not a finding.",
     "estimator_efficiency_claim_RETRACTED": "A prior version claimed per-turn normalisation gives ~32x precision / variance ~1000x, converting an uninformative interval into a precise null. RETRACTED: the 32x is mean turns (a units rescale); relative precision CI/|estimate| is unchanged (16.76 raw vs 16.95 per-turn, ratio 1.01x). The variance_gain 1014 was just 31.86^2. The claim contradicted our own null turns interaction (dividing by a near-constant cannot remove variance). D-prime rests on the calibration result alone.",
     "oaxaca_label_swap_fixed": "An earlier run reported '98% per-turn / 3% replay', naming the per-turn component twice, and had the JSON keys backwards (replay_term_dturns_x_occ / per_turn_term_turns_x_docc). Corrected per Eq.8: REPLAY = turns*dOcc (98.3%), TRAJECTORY = dturns*Occ (2.9%), remainder -1.3%, sum 100%. Keys are now replay_term_turns_x_docc / trajectory_term_dturns_x_occ. The math was always right; only the names were wrong.",
     "e2_collider_CONFIRMED": "Degeneracy by arm: Y00 24/36 (67%), Y10 24/36 (67%), Y01 28/36 (78%), Y11 28/36 (78%). Perfectly arm-consistent, 11 points higher in BOTH CoD cells, in exactly the direction Table 1 predicts for CoD's zero-shot-collapse failure mode. This is treatment-induced, not noise; filtering E2 to get the interaction is post-treatment conditioning on a collider. (An interim note comparing against the ~26/cell average mistakenly read this as balance; the correct comparison is the arm contrast, and the frozen YAML's collider basis stands.)",
@@ -66,7 +81,7 @@
     "1_exposition_spec_list": "Phase 6 rewrite (pending): replace the 6.3 setting-list with a what/why narrative anchored on the recurrence model.",
     "2_composition_more_extensive_across_task_types": "Acknowledged limitation (single code-repair family). D-prime does not require breadth; Option B is the scoped follow-up with the seeds-vs-tasks requirement above.",
     "3_statistical_relevance_success_split_or_normalise_by_turns": "Addressed honestly: per-turn normalisation (the editor's remedy) was implemented as the frozen primary, but it does NOT improve inference here - it rescales units by ~mean turns and leaves relative precision unchanged (CI/|est| 16.8 vs 17.0), because turn counts barely vary (turns interaction null). The genuine imprecision is between-task/between-run occupancy dispersion at n=12/cell. Success-stratified is shown descriptively with the collider caveat; the 72% degeneracy diagnostic exposes effective-n. We report that normalise-by-turns was not the effective remedy for this dataset and support it with the decomposition.",
-    "4_conclusions_significance": "D-prime: validated predictive replay model (98% of mean) + the estimator-efficiency result + clean Eq.8 attribution + the 72% degeneracy finding constitute a measurement contribution, not a non-result."
+    "4_conclusions_significance": "D-prime: an a priori recurrence model TESTED against measurement and shown to over-predict RTK's saving 3.05x, with the gap diagnosed (68% offset by increased generation under near-full retention) + the clean Eq.8 descriptive attribution + the 72% degeneracy finding. A quantified model-vs-measurement result, not a non-result and not a circular confirmation."
   },
   "next_steps_needing_user_go_ahead": [
     "Phase 6: create paper_for_TMLR/ (copy from frozen paper_for_AI_review_journal, keep original frozen) and rewrite exposition + integrate the estimator-efficiency thesis and corpus fixes.",
