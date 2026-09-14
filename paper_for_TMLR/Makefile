@@ -11,7 +11,7 @@ all: $(MAIN).pdf
 figures:
 	cd figures/scripts && bash generate_all.sh
 
-$(MAIN).pdf: $(MAIN).tex references.bib sn-jnl.cls sn-basic.bst Fig1.pdf Fig2.pdf Fig3.pdf Fig4.pdf Fig5.pdf Fig6.pdf
+$(MAIN).pdf: $(MAIN).tex references.bib tmlr.sty tmlr.bst Fig1.pdf Fig2.pdf Fig3.pdf Fig4.pdf Fig5.pdf Fig6.pdf
 	$(LATEX) $(MAIN)
 	$(BIBTEX) $(MAIN)
 	$(LATEX) $(MAIN)

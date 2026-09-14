@@ -1,4 +1,9 @@
-\documentclass[pdflatex,sn-basic,referee]{sn-jnl}
+\documentclass{article}
+
+% Mandatory TMLR style (JmlrOrg/tmlr-style-file). Default is anonymized
+% double-blind submission; use \usepackage[accepted]{tmlr} for the camera-ready
+% or \usepackage[preprint]{tmlr} for a non-anonymous arXiv version.
+\usepackage{tmlr}
 
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -8,44 +13,37 @@
 \usepackage{microtype}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{rotating}
+\usepackage{url}
+\usepackage{hyperref}
 \hypersetup{hidelinks}
 
-\makeatletter
-\renewcommand{\email}[1]{%
-  \global\advance\emailcnt by 1\relax
-  \if@corauemail
-    \g@addto@macro\corrauthemail{%
-      \setcounter{footnote}{0}%
-      \textcolor{blue}{#1}\ %
-    }%
-  \else
-    \g@addto@macro\authemail{%
-      \setcounter{footnote}{0}%
-      \textcolor{blue}{#1};\ %
-    }%
-  \fi
-}
-\makeatother
+% Double-blind toggle: when true, identifying links, the reproducibility-archive
+% citation, and the author-contributions statement are suppressed for review.
+% Set \anonfalse for the camera-ready.
+\newif\ifanon\anontrue
 
 \newcommand{\tabtworow}[2]{\begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{1.75cm}@{}}#1\\[-2pt]{\small #2}\end{tabular}}
 
+\title{Context as a Budget: A Taxonomy, an Accounting Framework, and a Measurement Audit for Composing Token-Efficiency Interventions in {LLM} Agents}
+
+\author{%
+  \name Soumitra Mehrotra \email soumitra.mehrotra9@gmail.com \\
+  \addr San Francisco, USA
+  \AND
+  \name Shubhender Singh \\
+  \addr San Francisco, USA
+  \AND
+  \name Saurabh Aggarwal \\
+  \addr San Francisco, USA
+}
+
 \begin{document}
-
-\title[Context as a Budget]{Context as a Budget: A Taxonomy, an Accounting Framework, and a Measurement Audit for Composing Token-Efficiency Interventions in {LLM} Agents}
-
-\author*[1]{\fnm{Soumitra} \sur{Mehrotra}}\email{soumitra.mehrotra9@gmail.com}
-
-\author[1]{\fnm{Shubhender} \sur{Singh}}\nomail
-
-\author[1]{\fnm{Saurabh} \sur{Aggarwal}}\nomail
-
-\affil*[1]{\orgaddress{\city{San Francisco}, \country{USA}}}
-
-\abstract{Large language model (LLM) agents consume a shared context budget that grows across turns through tool schemas, execution output, conversation history, and model reasoning. Many methods reduce this budget, but their published evaluations use different tasks and metrics and never test whether savings from methods in different parts of the pipeline compose. This paper asks a prior question: what does it cost to measure composition at all? We contribute (i) a taxonomy of fourteen in-scope interventions across five intervention points with eight comparison axes; (ii) a budget-recurrence accounting framework that expresses each category's savings in a common unit and yields testable predictions; and (iii) a measurement audit built from a preregistered $2{\times}2$ factorial pilot on a self-hosted coding agent. The audit is the central result. Cumulative prompt tokens have a per-cell standard deviation about equal to their mean ($\approx$62{,}700 versus $\approx$58{,}900), driven by task success or failure. Across eighteen token-outcome contrasts, only two are distinguishable from zero, and both are treatment-fidelity checks that confirm each intervention did the mechanical thing it is defined to do: output filtering cuts tool output ($-803$ tokens, $|t|=2.26$) and compaction cuts cumulative prompt tokens ($-23{,}495$, $|t|=2.08$). Neither survives multiplicity correction, and no compositional or downstream effect is detectable. When a design can barely detect its own manipulation, it cannot detect a second-order interaction between two manipulations. We quantify the requirement: resolving the observed output-filtering prompt-token effect would need roughly 4{,}900 runs per cell, against the twelve used here. We also document two reusable evaluation diagnostics: 72\% of a nominal 144-run experiment carried no information because runs were process-degenerate in a treatment-loaded pattern, and expanding from two to six random seeds bought only about one extra distinct trajectory per cell at temperature 0.2. The contribution is the framework together with the measured cost of running this class of evaluation correctly, with the pilot as the worked example.}
-
-\keywords{agent evaluation, composition study, context window, measurement, statistical power, systematization of knowledge, token efficiency}
-
 \maketitle
+
+\begin{abstract}
+Large language model (LLM) agents consume a shared context budget that grows across turns through tool schemas, execution output, conversation history, and model reasoning. Many methods reduce this budget, but their published evaluations use different tasks and metrics and never test whether savings from methods in different parts of the pipeline compose. This paper asks a prior question: what does it cost to measure composition at all? We contribute (i) a taxonomy of fourteen in-scope interventions across five intervention points with eight comparison axes; (ii) a budget-recurrence accounting framework that expresses each category's savings in a common unit and yields testable predictions; and (iii) a measurement audit built from a preregistered $2{\times}2$ factorial pilot on a self-hosted coding agent. The audit is the central result. Cumulative prompt tokens have a per-cell standard deviation about equal to their mean ($\approx$62{,}700 versus $\approx$58{,}900), driven by task success or failure. Across eighteen token-outcome contrasts, only two are distinguishable from zero, and both are treatment-fidelity checks that confirm each intervention did the mechanical thing it is defined to do: output filtering cuts tool output ($-803$ tokens, $|t|=2.26$) and compaction cuts cumulative prompt tokens ($-23{,}495$, $|t|=2.08$). Neither survives multiplicity correction, and no compositional or downstream effect is detectable. When a design can barely detect its own manipulation, it cannot detect a second-order interaction between two manipulations. We quantify the requirement: resolving the observed output-filtering prompt-token effect would need roughly 4{,}900 runs per cell, against the twelve used here. We also document two reusable evaluation diagnostics: 72\% of a nominal 144-run experiment carried no information because runs were process-degenerate in a treatment-loaded pattern, and expanding from two to six random seeds bought only about one extra distinct trajectory per cell at temperature 0.2. The contribution is the framework together with the measured cost of running this class of evaluation correctly, with the pilot as the worked example.
+\end{abstract}
 
 \section{Introduction}
 
@@ -212,9 +210,8 @@ MemGPT & OUT & paging & task capability & none & white-box & A & internal stack 
 Latent CoT & OUT & hidden state & acc.\ + latency & custom train & white-box & A & n/a & incommensurable unit \\
 \bottomrule
 \end{tabularx}
-\footnotetext[a]{Self-reported or vendor documentation; not independently peer-reviewed.}
-\footnotetext{Cat.\ = intervention-point category (Section~\ref{sec:taxonomy}). OUT = excluded boundary case (Section~\ref{sec:background}).}
-\footnotetext{Failure modes include reported and analytically inferred risks; provenance is provided in the extraction sheet.}
+
+{\footnotesize\raggedright $^{\mathrm{a}}$Self-reported or vendor documentation; not independently peer-reviewed. Cat.\ = intervention-point category (Section~\ref{sec:taxonomy}); OUT = excluded boundary case (Section~\ref{sec:background}). Failure modes include reported and analytically inferred risks; provenance is provided in the extraction sheet.\par}
 \end{sidewaystable}
 
 The intervention-point axis is a coding of each method's \emph{primary} action, not a claim that methods act at a single point. Several recent methods deliberately span points within one system: ACON~\citep{acon2025} jointly compresses tool observations (Category~2) and interaction history (Category~3); AgentDiet~\citep{agentdiet2025} prunes both across the trajectory and reports cost on all runs versus resolved-only runs; and LightThinker++~\citep{lightthinkerpp2026} couples reasoning compression (Category~4) with adaptive memory management (Category~3-like) in agentic tasks. We record these as category-spanning single methods rather than as cross-category \emph{compositions} in the sense of Section~\ref{sec:claims}, because each is one integrated method with one baseline rather than two separately baselined methods activated together. They nonetheless show that the boundaries this taxonomy draws are increasingly crossed inside individual methods, which is part of why a principled composition protocol is needed.
@@ -399,7 +396,7 @@ $Y_{11}$ & on  & on  & 34{,}343 & 6/12 & 68{,}685 \\
 95\% CI & \multicolumn{2}{c}{--} & $[-46{,}984,\;{+}50{,}141]$ & -- & -- \\
 \bottomrule
 \end{tabularx}
-\footnotetext{$n=12$ per cell (6 tasks $\times$ 2 seeds). Model: Qwen2.5-Coder-7B-Instruct (rev.~c03e6d3). Compaction trigger $\tau=4{,}096$ tokens.}
+{\footnotesize\raggedright $n=12$ per cell (6 tasks $\times$ 2 seeds). Model: Qwen2.5-Coder-7B-Instruct (rev.~c03e6d3). Compaction trigger $\tau=4{,}096$ tokens.\par}
 \end{table}
 
 \begin{figure}[htbp]
@@ -460,7 +457,7 @@ Interaction & turns & $+1.3$ & $5.3$ & $0.25$ & $[-8.3,\;+12.2]$ & no \\
 Interaction & tool output & $+859$ & $898$ & $0.96$ & $[-876,\;+2{,}487]$ & no \\
 \bottomrule
 \end{tabularx}
-\footnotetext{$n=12$ per cell, twelve (task, seed) blocks. PT/turn and PT for compaction are the same effect in different units and are not independent tests.}
+{\footnotesize\raggedright $n=12$ per cell, twelve (task, seed) blocks. PT/turn and PT for compaction are the same effect in different units and are not independent tests.\par}
 \end{table}
 
 \textbf{The survivors are manipulation checks, not findings.} The three detectable contrasts are exactly the two mechanical effects each treatment is defined to produce, one appearing in both raw and per-turn units. Output filtering reduces tool output because compressing tool output is what it does; compaction reduces prompt tokens because summarizing history is what it does. These are treatment-fidelity checks: they confirm the interventions were delivered, not that anything was discovered. The honest one-line summary of the audit is therefore \emph{treatment fidelity is confirmed, and no compositional or downstream effect is detectable}.
@@ -485,7 +482,7 @@ The accounting-framework-predicted output-filtering PT effect ($\approx$15{,}300
 The observed output-filtering PT effect ($\approx$5{,}000) & $\approx 4{,}900$ \\
 \bottomrule
 \end{tabularx}
-\footnotetext{Present design: $n=12$ per cell.}
+{\footnotesize\raggedright Present design: $n=12$ per cell.\par}
 \end{table}
 
 \subsection{Interpretation}
@@ -547,35 +544,26 @@ Concurrent work reaches compatible conclusions about the gap between token count
 
 We systematize fourteen in-scope token-efficiency interventions (thirteen with reported evaluation evidence) by where they act in the agent lifecycle and formalize how their savings recur across turns in a common accounting framework. We then ask what it costs to measure whether these interventions compose, and answer it with a preregistered $2{\times}2$ pilot and a measurement audit. The audit is the paper's central result: across eighteen token-outcome contrasts only the treatment-fidelity checks are detectable, none survives multiplicity correction, no compositional or downstream effect is detectable, and resolving the effect we do observe would require thousands of runs per cell against the twelve used. Cumulative-token variance about equal to its mean, treatment-loaded process degeneracy, and the futility of seed expansion at low temperature are stable, reusable properties of this evaluation setting. The contribution is thus a taxonomy, an accounting framework, and a measured account of what evaluating composition costs, with the pilot as the worked example rather than as evidence that the interventions are independent. Five specific hypotheses remain untested and are proposed as a research agenda.
 
-\backmatter
+\subsubsection*{Acknowledgments}
+\ifanon
+The acknowledgments are omitted to preserve double-blind review and will be added in the camera-ready version.
+\else
+The authors did not receive support from any organization for the submitted work and have no competing interests to disclose. Ethics approval, consent to participate, and consent for publication are not applicable.
+\fi
 
-\section*{Statements and Declarations}
+\subsubsection*{Data and code availability}
+\ifanon
+The aggregated run table, the significance-audit artifacts that produce the central exhibit (Table~\ref{tab:audit}), the analysis and figure code, and the frozen preregistered hypothesis files whose SHA-256 hashes are listed in Appendix~\ref{app:prereg} are provided as anonymized supplementary material for review. A public archive (Zenodo DOI and source repository) will be linked in the camera-ready version. Raw agent run traces are not archived owing to their size and environment-specific paths.
+\else
+The aggregated run table, the significance-audit artifacts that produce the central exhibit (Table~\ref{tab:audit}), the analysis and figure-generation code, and the frozen preregistered hypothesis files whose SHA-256 hashes are listed in Appendix~\ref{app:prereg} are archived at Zenodo, \url{https://doi.org/10.5281/zenodo.21715347}~\citep{cab_dataset2026}, and mirrored in a public source repository. The confirmatory estimands and the full measurement audit of Section~\ref{sec:audit} reproduce byte-for-byte from the raw run traces through the archived extraction and bootstrap pipeline. Raw agent run traces are not archived owing to their size and environment-specific paths.
+\fi
 
-\subsection*{Funding}
-The authors did not receive support from any organization for the submitted work.
-
-\subsection*{Competing interests}
-The authors have no relevant financial or non-financial interests to disclose.
-
-\subsection*{Ethics approval and consent to participate}
-Not applicable.
-
-\subsection*{Consent for publication}
-Not applicable.
-
-\subsection*{Data availability}
-Aggregated experimental results supporting the composition study, including the frozen preregistered hypothesis files whose SHA-256 hashes are listed in Appendix~\ref{app:prereg}, are archived at Zenodo, \url{https://doi.org/10.5281/zenodo.21715347}~\citep{cab_dataset2026}. Raw agent run traces are not publicly archived owing to their size and environment-specific paths; they are available from the corresponding author on reasonable request.
-
-\subsection*{Materials availability}
-Not applicable.
-
-\subsection*{Code availability}
-Analysis scripts, figure-generation code, and aggregated outputs are archived at Zenodo, \url{https://doi.org/10.5281/zenodo.21715347}~\citep{cab_dataset2026}. The confirmatory estimands and the full measurement audit of Section~\ref{sec:audit} reproduce byte-for-byte from the raw run traces through the archived extraction and bootstrap pipeline, whose preregistered hypothesis-file hashes are listed in Appendix~\ref{app:prereg}.
-
-\subsection*{Author contributions}
+\ifanon\else
+\subsubsection*{Author contributions}
 Soumitra Mehrotra conceived the study, designed and conducted the experiments, performed the analysis, and wrote the manuscript. Shubhender Singh contributed to the taxonomy framing, reviewed the structural claims and composition-study interpretation, and revised the manuscript. Saurabh Aggarwal contributed to the related-work synthesis, reviewed the evidence-audit tables and experimental methodology, and revised the manuscript.
+\fi
 
-\begin{appendices}
+\appendix
 
 \section{C1 Evidence Table}
 \label{app:c1}
@@ -591,7 +579,7 @@ Table~\ref{tab:c1_evidence} (Section~\ref{sec:claims}) lists the baseline evalua
 
 \textbf{RTK:} Rust binary intercepting shell tool calls; activated when \texttt{rtk=on}. Compaction: threshold $\tau=4{,}096$ serialized prompt tokens; summarizer uses the same model at temperature~0.0. Chain of Draft: system prompt instruction limiting each reasoning step to five words.
 
-\textbf{Blocking:} E1 (RTK-compaction): 6 tasks $\times$ 2 seeds (17, 52). E2 (RTK-CoD): 6 tasks $\times$ 6 seeds (7, 13, 17, 42, 52, 99). Analysis scripts and preregistered hypothesis files are archived at Zenodo~\citep{cab_dataset2026}.
+\textbf{Blocking:} E1 (RTK-compaction): 6 tasks $\times$ 2 seeds (17, 52). E2 (RTK-CoD): 6 tasks $\times$ 6 seeds (7, 13, 17, 42, 52, 99). Analysis scripts and preregistered hypothesis files are provided in the \ifanon anonymized supplementary material\else reproducibility archive~\citep{cab_dataset2026}\fi.
 
 \section{Preregistered Hypotheses}
 \label{app:prereg}
@@ -607,14 +595,13 @@ Hypothesis files were frozen before confirmatory data collection (2026-07-15 UTC
 {\small\texttt{74448464f0532a92bbad9a9f71423613}}
 \end{itemize}
 
-The frozen hypothesis files themselves are archived at Zenodo~\citep{cab_dataset2026}, allowing independent verification of these hashes.
+The frozen hypothesis files themselves are provided in the \ifanon anonymized supplementary material\else reproducibility archive~\citep{cab_dataset2026}\fi, allowing independent verification of these hashes.
 
 \textbf{E1 preregistered direction:} Negative raw interaction on cumulative PT (expected superadditive savings from RTK delaying compaction trigger). Primary estimand: $\hat{\Delta}=Y_{11}-Y_{10}-Y_{01}+Y_{00}$. Model: $\mathrm{PT}\sim \mathrm{rtk}+\mathrm{compaction}+\mathrm{rtk}{:}\mathrm{compaction}+\mathrm{task}+\mathrm{seed}$.
 
 \textbf{E2 preregistered direction} (\texttt{e1b\_frozen.yaml})\textbf{:} Near-zero interaction on cumulative GT under unchanged trajectories; any interaction would indicate trajectory-mediated coupling between RTK and CoD. Secondary failure mode: CoD degrades planning quality or increases retries. E2 used six seeds (7, 13, 17, 42, 52, 99) fixed in the hypothesis file before data collection; E1 used two seeds (17, 52).
 
-\end{appendices}
-
+\bibliographystyle{tmlr}
 \bibliography{references}
 
 \end{document}
